@@ -1,0 +1,1284 @@
+{
+	"info": {
+		"_postman_id": "flawless-api-v2-2025",
+		"name": "Flawless API v2 - Complete Collection",
+		"description": "Complete Postman collection matching current codebase structure with /api/* routes",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "flawless-backend"
+	},
+	"item": [
+		{
+			"name": "1. Authentication",
+			"item": [
+				{
+					"name": "Check Email Exists",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/auth/check-email?email=user@example.com",
+							"host": ["{{base_url}}"],
+							"path": ["api", "auth", "check-email"],
+							"query": [
+								{
+									"key": "email",
+									"value": "user@example.com",
+									"description": "Email address to check"
+								}
+							]
+						},
+						"description": "Check if email exists in the system"
+					},
+					"response": []
+				},
+				{
+					"name": "Create User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    const jsonData = pm.response.json();",
+									"    if (jsonData.data && jsonData.data.userId) {",
+									"        pm.environment.set(\"user_id\", jsonData.data.userId);",
+									"    }",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"firstName\": \"John\",\n    \"lastName\": \"Doe\",\n    \"email\": \"john.doe@example.com\",\n    \"phone\": \"9876543210\",\n    \"address\": \"123 Main Street\",\n    \"imgUrl\": \"https://example.com/profile.jpg\",\n    \"countryCode\": \"+1\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/create-user",
+							"host": ["{{base_url}}"],
+							"path": ["api", "auth", "create-user"],
+							"description": "Create user account. Note: OTP is generated automatically and sent via SMS. Required fields: firstName, lastName, phone"
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get OTP (User)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    const jsonData = pm.response.json();",
+									"    if (jsonData.token) {",
+									"        pm.environment.set(\"auth_token\", jsonData.token);",
+									"    }",
+									"    if (jsonData.data && jsonData.data.userId) {",
+									"        pm.environment.set(\"user_id\", jsonData.data.userId);",
+									"    }",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/auth/get-otp?phone=9876543210&countryCode=1",
+							"host": ["{{base_url}}"],
+							"path": ["api", "auth", "get-otp"],
+							"query": [
+								{
+									"key": "phone",
+									"value": "9876543210",
+									"description": "Phone number (10-15 digits)"
+								},
+								{
+									"key": "countryCode",
+									"value": "1",
+									"description": "Country code (e.g., 1 for US, 91 for India). Optional."
+								}
+							],
+							"description": "Get OTP for user. OTP is generated and sent via SMS. Use this OTP in create-user or token endpoint."
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Token (Login)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    const jsonData = pm.response.json();",
+									"    const requestBody = pm.request.body.raw ? JSON.parse(pm.request.body.raw) : {};",
+									"    const userType = requestBody.userType || 1;",
+									"    ",
+									"    if (jsonData.data && jsonData.data.accessToken) {",
+									"        if (userType === 2) {",
+									"            // Artist login",
+									"            pm.environment.set(\"artist_token\", jsonData.data.accessToken);",
+									"            pm.environment.set(\"artist_id\", jsonData.data.id);",
+									"        } else {",
+									"            // User login",
+									"            pm.environment.set(\"user_token\", jsonData.data.accessToken);",
+									"            pm.environment.set(\"user_id\", jsonData.data.id);",
+									"        }",
+									"    } else if (jsonData.token) {",
+									"        if (userType === 2) {",
+									"            pm.environment.set(\"artist_token\", jsonData.token);",
+									"        } else {",
+									"            pm.environment.set(\"user_token\", jsonData.token);",
+									"        }",
+									"    }",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"phone\": \"9876543210\",\n    \"otp\": \"123456\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/token",
+							"host": ["{{base_url}}"],
+							"path": ["api", "auth", "token"],
+							"description": "Login with phone and OTP. Alternative format: { \"id\": \"user-id\", \"userType\": 1, \"otp\": \"123456\" }"
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Artist",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200 || pm.response.code === 201) {",
+									"    const jsonData = pm.response.json();",
+									"    // Save artist ID",
+									"    if (jsonData.data && jsonData.data.id) {",
+									"        pm.environment.set(\"artist_id\", jsonData.data.id);",
+									"    } else if (jsonData.id) {",
+									"        pm.environment.set(\"artist_id\", jsonData.id);",
+									"    }",
+									"    // Save artist token if provided",
+									"    if (jsonData.data && jsonData.data.accessToken) {",
+									"        pm.environment.set(\"artist_token\", jsonData.data.accessToken);",
+									"        pm.environment.set(\"artist_id\", jsonData.data.id);",
+									"    }",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"firstName\": \"Jane\",\n    \"lastName\": \"Smith\",\n    \"email\": \"jane.smith@example.com\",\n    \"phone\": \"9876543211\",\n    \"address\": \"456 Oak Avenue\",\n    \"geocode\": \"40.7128,-74.0060\",\n    \"city\": \"New York\",\n    \"state\": \"NY\",\n    \"businessType\": 1,\n    \"videoUrl\": \"https://example.com/video.mp4\",\n    \"countryCode\": \"+1\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/create-artist",
+							"host": ["{{base_url}}"],
+							"path": ["api", "auth", "create-artist"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Artist OTP",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    const jsonData = pm.response.json();",
+									"    if (jsonData.token) {",
+									"        pm.environment.set(\"auth_token\", jsonData.token);",
+									"    }",
+									"    if (jsonData.data && jsonData.data.artistId) {",
+									"        pm.environment.set(\"artist_id\", jsonData.data.artistId);",
+									"    }",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/auth/get-artist-otp?phone=9876543211&countryCode=1",
+							"host": ["{{base_url}}"],
+							"path": ["api", "auth", "get-artist-otp"],
+							"query": [
+								{
+									"key": "phone",
+									"value": "9876543211",
+									"description": "Phone number (10-15 digits)"
+								},
+								{
+									"key": "countryCode",
+									"value": "1",
+									"description": "Country code (e.g., 1 for US, 91 for India). Optional."
+								}
+							],
+							"description": "Get OTP for artist. OTP is generated and sent via SMS. Use this OTP in create-artist or token endpoint."
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Authentication endpoints - Get tokens first"
+		},
+		{
+			"name": "2. Catalog",
+			"item": [
+				{
+					"name": "Get Categories with Services",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    const jsonData = pm.response.json();",
+									"    if (jsonData.data && jsonData.data[0] && jsonData.data[0].services && jsonData.data[0].services[0]) {",
+									"        pm.environment.set(\"service_id\", jsonData.data[0].services[0].serviceId);",
+									"    }",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/catalog/categories",
+							"host": ["{{base_url}}"],
+							"path": ["api", "catalog", "categories"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Prices for Service",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/catalog/prices?serviceId={{service_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["api", "catalog", "prices"],
+							"query": [
+								{
+									"key": "serviceId",
+									"value": "{{service_id}}",
+									"description": "Service UUID"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Subcategories by Service",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/catalog/subcategories?serviceId={{service_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["api", "catalog", "subcategories"],
+							"query": [
+								{
+									"key": "serviceId",
+									"value": "{{service_id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Catalog endpoints - Get services/categories (no auth needed)"
+		},
+		{
+			"name": "3. Users",
+			"item": [
+				{
+					"name": "Get User Profile",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/users/profile",
+							"host": ["{{base_url}}"],
+							"path": ["api", "users", "profile"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update User Profile",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"firstName\": \"John\",\n    \"lastName\": \"Doe\",\n    \"email\": \"john.updated@example.com\",\n    \"phone\": \"9876543210\",\n    \"address\": \"456 Updated Street\",\n    \"imgUrl\": \"https://example.com/new-profile.jpg\",\n    \"countryCode\": \"+1\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/users/update",
+							"host": ["{{base_url}}"],
+							"path": ["api", "users", "update"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update User Gratuity",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userId\": \"{{user_id}}\",\n    \"gratuity\": 15\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/users/update-gratuity",
+							"host": ["{{base_url}}"],
+							"path": ["api", "users", "update-gratuity"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Address",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userId\": \"{{user_id}}\",\n    \"address\": \"123 Main Street\",\n    \"city\": \"New York\",\n    \"state\": \"NY\",\n    \"zipcode\": \"10001\",\n    \"geocode\": \"40.7128,-74.0060\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/users/addresses",
+							"host": ["{{base_url}}"],
+							"path": ["api", "users", "addresses"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get User Addresses",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/users/addresses",
+							"host": ["{{base_url}}"],
+							"path": ["api", "users", "addresses"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Address by ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/users/addresses/:addressId",
+							"host": ["{{base_url}}"],
+							"path": ["api", "users", "addresses", ":addressId"],
+							"variable": [
+								{
+									"key": "addressId",
+									"value": "uuid-here"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Address",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"addressId\": \"uuid-here\",\n    \"address\": \"456 Updated Street\",\n    \"city\": \"Los Angeles\",\n    \"state\": \"CA\",\n    \"zipcode\": \"90001\",\n    \"geocode\": \"34.0522,-118.2437\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/users/addresses/update",
+							"host": ["{{base_url}}"],
+							"path": ["api", "users", "addresses", "update"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Address",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/users/addresses/:addressId",
+							"host": ["{{base_url}}"],
+							"path": ["api", "users", "addresses", ":addressId"],
+							"variable": [
+								{
+									"key": "addressId",
+									"value": "uuid-here"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "User profile management endpoints"
+		},
+		{
+			"name": "4. Artists",
+			"item": [
+				{
+					"name": "Get Artist Profile",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/artists/profile",
+							"host": ["{{base_url}}"],
+							"path": ["api", "artists", "profile"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Artist Profile",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"firstName\": \"Jane\",\n    \"lastName\": \"Smith\",\n    \"email\": \"jane.updated@example.com\",\n    \"phone\": \"9876543211\",\n    \"address\": \"789 Updated Avenue\",\n    \"geocode\": \"40.7128,-74.0060\",\n    \"city\": \"New York\",\n    \"state\": \"NY\",\n    \"businessType\": 1,\n    \"videoUrl\": \"https://example.com/new-video.mp4\",\n    \"countryCode\": \"+1\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/artists/update",
+							"host": ["{{base_url}}"],
+							"path": ["api", "artists", "update"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Artist Video",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"videoUrl\": \"https://example.com/new-video.mp4\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/artists/update-video",
+							"host": ["{{base_url}}"],
+							"path": ["api", "artists", "update-video"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Artist Location",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"artistId\": \"{{artist_id}}\",\n    \"geocode\": \"40.7128,-74.0060\",\n    \"city\": \"New York\",\n    \"state\": \"NY\",\n    \"address\": \"123 Main Street\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/artists/location",
+							"host": ["{{base_url}}"],
+							"path": ["api", "artists", "location"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Artist Bookings",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/artists/bookings?artistId={{artist_id}}&status=pending",
+							"host": ["{{base_url}}"],
+							"path": ["api", "artists", "bookings"],
+							"query": [
+								{
+									"key": "artistId",
+									"value": "{{artist_id}}"
+								},
+								{
+									"key": "status",
+									"value": "pending",
+									"disabled": true
+								},
+								{
+									"key": "bookingType",
+									"value": "later",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Artist management endpoints"
+		},
+		{
+			"name": "5. Cart",
+			"item": [
+				{
+					"name": "Add to Cart",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    const jsonData = pm.response.json();",
+									"    if (jsonData.data && jsonData.data.cartId) {",
+									"        pm.environment.set(\"cart_id\", jsonData.data.cartId);",
+									"    }",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userId\": \"{{user_id}}\",\n    \"serviceId\": \"{{service_id}}\",\n    \"quantity\": 1,\n    \"bookingType\": \"home\",\n    \"bookingTime\": \"2025-01-15 14:30:00\",\n    \"price\": 50.00,\n    \"longHairAmount\": 10.00,\n    \"addOnAmount\": 5.00,\n    \"subCategoryId\": \"uuid-here\",\n    \"gratuity\": 10.00,\n    \"artist\": \"Jane Smith\",\n    \"imageUrl\": \"https://example.com/image.jpg\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/cart",
+							"host": ["{{base_url}}"],
+							"path": ["api", "cart"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Cart",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/cart",
+							"host": ["{{base_url}}"],
+							"path": ["api", "cart"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Assign Artist to Cart Item",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"cartId\": \"{{cart_id}}\",\n    \"cartItemId\": \"uuid-here\",\n    \"artistId\": \"{{artist_id}}\",\n    \"travelFee\": 5.00\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/cart/assign-artist",
+							"host": ["{{base_url}}"],
+							"path": ["api", "cart", "assign-artist"]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Shopping cart endpoints"
+		},
+		{
+			"name": "6. Bookings",
+			"item": [
+				{
+					"name": "Create Booking",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    const jsonData = pm.response.json();",
+									"    if (jsonData.data && jsonData.data.bookingId) {",
+									"        pm.environment.set(\"booking_id\", jsonData.data.bookingId);",
+									"    }",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userId\": \"{{user_id}}\",\n    \"cartId\": \"{{cart_id}}\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/bookings",
+							"host": ["{{base_url}}"],
+							"path": ["api", "bookings"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Booking",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/bookings?bookingId={{booking_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["api", "bookings"],
+							"query": [
+								{
+									"key": "bookingId",
+									"value": "{{booking_id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get User Bookings",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/bookings/data?bookingType=later",
+							"host": ["{{base_url}}"],
+							"path": ["api", "bookings", "data"],
+							"query": [
+								{
+									"key": "bookingType",
+									"value": "later"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Confirm Booking",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"transactionId\": \"uuid-here\",\n    \"bookingId\": \"{{booking_id}}\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/bookings/confirm",
+							"host": ["{{base_url}}"],
+							"path": ["api", "bookings", "confirm"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cancel Booking",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"bookingId\": \"{{booking_id}}\",\n    \"reason\": \"Changed my mind\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/bookings/cancel",
+							"host": ["{{base_url}}"],
+							"path": ["api", "bookings", "cancel"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Gratuity to Booking",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"bookingItemId\": \"uuid-here\",\n    \"gratuity\": 15.00\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/bookings/gratuity",
+							"host": ["{{base_url}}"],
+							"path": ["api", "bookings", "gratuity"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Rating to Booking",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"bookingItemId\": \"uuid-here\",\n    \"rating\": 5\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/bookings/rating",
+							"host": ["{{base_url}}"],
+							"path": ["api", "bookings", "rating"]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Booking management endpoints"
+		},
+		{
+			"name": "7. Payments",
+			"item": [
+				{
+					"name": "Make Gratuity Payment",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"bookingId\": \"{{booking_id}}\",\n    \"userId\": \"{{user_id}}\",\n    \"gratuityAmount\": 15.00,\n    \"BookingItemId\": \"uuid-here\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/payments/gratuity",
+							"host": ["{{base_url}}"],
+							"path": ["api", "payments", "gratuity"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Booking Balance Payment",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"bookingId\": \"{{booking_id}}\",\n    \"totalAmount\": 100.00,\n    \"amountPaid\": 50.00\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/payments/booking",
+							"host": ["{{base_url}}"],
+							"path": ["api", "payments", "booking"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Bulk Booking Payment",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"bookingId\": \"{{booking_id}}\",\n    \"amount\": 100.00\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/payments/booking-payment",
+							"host": ["{{base_url}}"],
+							"path": ["api", "payments", "booking-payment"]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Payment processing endpoints"
+		},
+		{
+			"name": "8. Chat",
+			"item": [
+				{
+					"name": "Send Chat Message",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"senderId\": \"{{user_id}}\",\n    \"receiverId\": \"{{artist_id}}\",\n    \"message\": \"Hello, I'd like to book a service\",\n    \"bookingId\": \"{{booking_id}}\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/chat",
+							"host": ["{{base_url}}"],
+							"path": ["api", "chat"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Chat Messages",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/chat/messages?conversationId=uuid-here&limit=50&offset=0",
+							"host": ["{{base_url}}"],
+							"path": ["api", "chat", "messages"],
+							"query": [
+								{
+									"key": "conversationId",
+									"value": "uuid-here"
+								},
+								{
+									"key": "limit",
+									"value": "50"
+								},
+								{
+									"key": "offset",
+									"value": "0"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Chat List",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/chat/list?userId={{user_id}}&limit=50",
+							"host": ["{{base_url}}"],
+							"path": ["api", "chat", "list"],
+							"query": [
+								{
+									"key": "userId",
+									"value": "{{user_id}}"
+								},
+								{
+									"key": "limit",
+									"value": "50"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Chat/messaging endpoints"
+		},
+		{
+			"name": "9. Wishlist",
+			"item": [
+				{
+					"name": "Add to Wishlist",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userId\": \"{{user_id}}\",\n    \"serviceId\": \"{{service_id}}\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/wishlist",
+							"host": ["{{base_url}}"],
+							"path": ["api", "wishlist"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Wishlist",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/wishlist",
+							"host": ["{{base_url}}"],
+							"path": ["api", "wishlist"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Remove from Wishlist",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/wishlist/:wishlistId",
+							"host": ["{{base_url}}"],
+							"path": ["api", "wishlist", ":wishlistId"],
+							"variable": [
+								{
+									"key": "wishlistId",
+									"value": "uuid-here"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Send Contact Message",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"John Doe\",\n    \"email\": \"john.doe@example.com\",\n    \"message\": \"I have a question about your services\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/wishlist/contact",
+							"host": ["{{base_url}}"],
+							"path": ["api", "wishlist", "contact"]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Wishlist endpoints"
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [""]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [""]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:3000",
+			"type": "string",
+			"description": "Base URL without /api (paths already include /api)"
+		}
+	]
+}
+

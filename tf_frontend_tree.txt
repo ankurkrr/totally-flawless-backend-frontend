@@ -1,0 +1,190 @@
+tf-frontend code tree:
+
+tf-frontend (root)
+- App.tsx
+- EXPOSED_KEYS_LIST.md
+- Gemfile
+- Gemfile.lock
+- Manually Tested
+- QUICK_FIX_GUIDE.md
+- README.md
+- SECURITY.md
+- SECURITY_AUDIT_REPORT.md
+- app.json
+- babel.config.js
+- build_bundle.bat
+- findstr
+- flawless-api-v2 (1).json
+- index.js
+- jest.config.js
+- metro.config.js
+- package-lock.json
+- package.json
+- react-native.config.js
+- tsconfig.json
+
+__mocks__/
+- fileMock.js
+
+__tests__/
+- App.test.tsx
+
+android/
+- build.gradle
+- gradle.properties
+- gradlew
+- gradlew.bat
+- settings.gradle
+- app/
+  - build.gradle
+  - debug.keystore
+  - flawless-upload-key.keystore
+  - google-services.json
+  - proguard-rules.pro
+  - upload_certificate.pem
+  - src/
+    - debug/
+      - AndroidManifest.xml
+    - main/
+      - AndroidManifest.xml
+      - assets/
+        - fonts/
+        - index.android.bundle
+      - java/
+        - com/flawless/MainActivity.kt
+        - com/flawless/MainApplication.kt
+      - res/
+        - ... (Android resources)
+
+ios/
+- GoogleService-Info.plist
+- Podfile
+- Podfile.lock
+- flawless.xcodeproj/
+- flawless.xcworkspace/
+- flawless/
+  - AppDelegate.h
+  - AppDelegate.mm
+  - Images.xcassets/
+  - Info.plist
+  - LaunchScreen.storyboard
+  - flawless.entitlements
+  - main.m
+- flawlessTests/
+  - Info.plist
+  - flawlessTests.m
+
+jest/
+- setup.js
+
+src/
+- Navigation/
+  - index.tsx
+
+- assets/
+  - fonts/
+  - ... (contains image assets like 1.jpeg, artist.png, etc.)
+
+- components/
+  - ArtistBottomBar.js
+  - BookingCard.js
+  - BottomBar.js
+  - CommonPhotoClick.tsx
+  - CommonSvg.tsx
+  - CustomImageView.tsx
+  - CustomStarRating.tsx
+  - CustomSwitch.tsx
+  - CustomVideoView.tsx
+  - FacebookService.js
+  - FacebookServiceNext.js
+  - TimePicker.js
+  - Toast.js
+  - TopBar.js
+
+- constants/
+  - enums.ts
+  - images.ts
+  - screenNames.ts
+
+- json/
+  - countryCodes.json
+
+- screens/
+  - AddAddress.js
+  - ApplicationReview.js
+  - AuthLink.js
+  - BookAppointment.js
+  - BookVirtualAppointment.tsx
+  - Booking.js
+  - Cart.js
+  - CartNew.js
+  - CartOld.js
+  - DrawerMenu.js
+  - HairStyle.js
+  - Home.js
+  - Login.js
+  - MyGallery.tsx
+  - Register.js
+  - SavedAddress.js
+  - Slider.js
+  - Splash.js
+  - Summary.js
+  - SummaryLater.js
+  - TrackArtistInUserBooking.tsx
+  - UserBookings.tsx
+  - UserChat.tsx
+  - UserContext.js
+  - UserProfile.tsx
+  - UserWishlist.tsx
+  - VerifyMobile.js
+  - VerifyOTP.js
+  - artist/
+    - ArtistBooking.tsx
+    - ArtistChat.tsx
+    - ArtistHome.tsx
+    - ArtistLogin.js
+    - ArtistProfile.tsx
+    - ArtistSavedAddress.tsx
+    - CompletedAndRejectedComponent.tsx
+    - NewBookingRequestModal.tsx
+    - OngoingAndUpcomingComponent.tsx
+    - PendingComponent.tsx
+    - UpcomingComponent.tsx
+    - style.ts
+  - components/
+    - AddGratuityModal.tsx
+    - AddRatingModal.tsx
+    - AllBookingUserComponent.tsx
+    - ArtistProfileData.tsx
+    - CancelledUserComponent.tsx
+    - CompletedUserComponent.tsx
+    - Loader.js
+    - PendingUserComponent.tsx
+    - UpcomingUserComponent.tsx
+    - index.ts
+    - style.ts
+
+- services/
+  - NotificationService.js
+  - S3UploadService.js
+  - SendNotification.js
+  - apiClient.ts
+  - axiosInterceptor.ts
+  - fetchAccessToken.ts
+  - generateToken.ts
+  - useKeyboardVisible.ts
+  - utils.ts
+
+- store/
+  - allactionsTypes.js
+  - fcmService.json
+  - store.js
+  - url.ts
+  - reducers/
+    - appreducer.js
+    - index.js
+
+- style/
+  - GlobalStyles.ts
+  - notes.ts
+  - theme.ts

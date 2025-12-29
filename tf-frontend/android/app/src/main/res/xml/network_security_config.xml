@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <domain-config cleartextTrafficPermitted="true">
+        <!-- Allow cleartext traffic for specific domains -->
+        <domain includeSubdomains="true">http://192.168.182.254:3001</domain>
+    </domain-config>
+</network-security-config>

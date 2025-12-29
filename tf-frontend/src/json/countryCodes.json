@@ -1,0 +1,906 @@
+[
+    {
+        "search": "1",
+        "value": "+1"
+    },
+    {
+        "search": "7",
+        "value": "+7"
+    },
+    {
+        "search": "20",
+        "value": "+20"
+    },
+    {
+        "search": "27",
+        "value": "+27"
+    },
+    {
+        "search": "30",
+        "value": "+30"
+    },
+    {
+        "search": "31",
+        "value": "+31"
+    },
+    {
+        "search": "32",
+        "value": "+32"
+    },
+    {
+        "search": "33",
+        "value": "+33"
+    },
+    {
+        "search": "34",
+        "value": "+34"
+    },
+    {
+        "search": "36",
+        "value": "+36"
+    },
+    {
+        "search": "39",
+        "value": "+39"
+    },
+    {
+        "search": "40",
+        "value": "+40"
+    },
+    {
+        "search": "41",
+        "value": "+41"
+    },
+    {
+        "search": "43",
+        "value": "+43"
+    },
+    {
+        "search": "44",
+        "value": "+44"
+    },
+    {
+        "search": "45",
+        "value": "+45"
+    },
+    {
+        "search": "46",
+        "value": "+46"
+    },
+    {
+        "search": "47",
+        "value": "+47"
+    },
+    {
+        "search": "48",
+        "value": "+48"
+    },
+    {
+        "search": "49",
+        "value": "+49"
+    },
+    {
+        "search": "51",
+        "value": "+51"
+    },
+    {
+        "search": "52",
+        "value": "+52"
+    },
+    {
+        "search": "53",
+        "value": "+53"
+    },
+    {
+        "search": "54",
+        "value": "+54"
+    },
+    {
+        "search": "55",
+        "value": "+55"
+    },
+    {
+        "search": "56",
+        "value": "+56"
+    },
+    {
+        "search": "57",
+        "value": "+57"
+    },
+    {
+        "search": "58",
+        "value": "+58"
+    },
+    {
+        "search": "60",
+        "value": "+60"
+    },
+    {
+        "search": "61",
+        "value": "+61"
+    },
+    {
+        "search": "62",
+        "value": "+62"
+    },
+    {
+        "search": "63",
+        "value": "+63"
+    },
+    {
+        "search": "64",
+        "value": "+64"
+    },
+    {
+        "search": "65",
+        "value": "+65"
+    },
+    {
+        "search": "66",
+        "value": "+66"
+    },
+    {
+        "search": "77",
+        "value": "+77"
+    },
+    {
+        "search": "81",
+        "value": "+81"
+    },
+    {
+        "search": "82",
+        "value": "+82"
+    },
+    {
+        "search": "84",
+        "value": "+84"
+    },
+    {
+        "search": "86",
+        "value": "+86"
+    },
+    {
+        "search": "90",
+        "value": "+90"
+    },
+    {
+        "search": "91",
+        "value": "+91"
+    },
+    {
+        "search": "92",
+        "value": "+92"
+    },
+    {
+        "search": "93",
+        "value": "+93"
+    },
+    {
+        "search": "94",
+        "value": "+94"
+    },
+    {
+        "search": "95",
+        "value": "+95"
+    },
+    {
+        "search": "98",
+        "value": "+98"
+    },
+    {
+        "search": "211",
+        "value": "+211"
+    },
+    {
+        "search": "212",
+        "value": "+212"
+    },
+    {
+        "search": "213",
+        "value": "+213"
+    },
+    {
+        "search": "216",
+        "value": "+216"
+    },
+    {
+        "search": "218",
+        "value": "+218"
+    },
+    {
+        "search": "220",
+        "value": "+220"
+    },
+    {
+        "search": "221",
+        "value": "+221"
+    },
+    {
+        "search": "222",
+        "value": "+222"
+    },
+    {
+        "search": "223",
+        "value": "+223"
+    },
+    {
+        "search": "224",
+        "value": "+224"
+    },
+    {
+        "search": "225",
+        "value": "+225"
+    },
+    {
+        "search": "226",
+        "value": "+226"
+    },
+    {
+        "search": "227",
+        "value": "+227"
+    },
+    {
+        "search": "228",
+        "value": "+228"
+    },
+    {
+        "search": "229",
+        "value": "+229"
+    },
+    {
+        "search": "230",
+        "value": "+230"
+    },
+    {
+        "search": "231",
+        "value": "+231"
+    },
+    {
+        "search": "232",
+        "value": "+232"
+    },
+    {
+        "search": "233",
+        "value": "+233"
+    },
+    {
+        "search": "234",
+        "value": "+234"
+    },
+    {
+        "search": "235",
+        "value": "+235"
+    },
+    {
+        "search": "236",
+        "value": "+236"
+    },
+    {
+        "search": "237",
+        "value": "+237"
+    },
+    {
+        "search": "238",
+        "value": "+238"
+    },
+    {
+        "search": "239",
+        "value": "+239"
+    },
+    {
+        "search": "240",
+        "value": "+240"
+    },
+    {
+        "search": "241",
+        "value": "+241"
+    },
+    {
+        "search": "242",
+        "value": "+242"
+    },
+    {
+        "search": "243",
+        "value": "+243"
+    },
+    {
+        "search": "244",
+        "value": "+244"
+    },
+    {
+        "search": "245",
+        "value": "+245"
+    },
+    {
+        "search": "246",
+        "value": "+246"
+    },
+    {
+        "search": "248",
+        "value": "+248"
+    },
+    {
+        "search": "249",
+        "value": "+249"
+    },
+    {
+        "search": "250",
+        "value": "+250"
+    },
+    {
+        "search": "251",
+        "value": "+251"
+    },
+    {
+        "search": "252",
+        "value": "+252"
+    },
+    {
+        "search": "253",
+        "value": "+253"
+    },
+    {
+        "search": "254",
+        "value": "+254"
+    },
+    {
+        "search": "255",
+        "value": "+255"
+    },
+    {
+        "search": "256",
+        "value": "+256"
+    },
+    {
+        "search": "257",
+        "value": "+257"
+    },
+    {
+        "search": "258",
+        "value": "+258"
+    },
+    {
+        "search": "260",
+        "value": "+260"
+    },
+    {
+        "search": "261",
+        "value": "+261"
+    },
+    {
+        "search": "262",
+        "value": "+262"
+    },
+    {
+        "search": "263",
+        "value": "+263"
+    },
+    {
+        "search": "264",
+        "value": "+264"
+    },
+    {
+        "search": "265",
+        "value": "+265"
+    },
+    {
+        "search": "266",
+        "value": "+266"
+    },
+    {
+        "search": "267",
+        "value": "+267"
+    },
+    {
+        "search": "268",
+        "value": "+268"
+    },
+    {
+        "search": "269",
+        "value": "+269"
+    },
+    {
+        "search": "290",
+        "value": "+290"
+    },
+    {
+        "search": "291",
+        "value": "+291"
+    },
+    {
+        "search": "297",
+        "value": "+297"
+    },
+    {
+        "search": "298",
+        "value": "+298"
+    },
+    {
+        "search": "299",
+        "value": "+299"
+    },
+    {
+        "search": "350",
+        "value": "+350"
+    },
+    {
+        "search": "351",
+        "value": "+351"
+    },
+    {
+        "search": "352",
+        "value": "+352"
+    },
+    {
+        "search": "353",
+        "value": "+353"
+    },
+    {
+        "search": "354",
+        "value": "+354"
+    },
+    {
+        "search": "355",
+        "value": "+355"
+    },
+    {
+        "search": "356",
+        "value": "+356"
+    },
+    {
+        "search": "357",
+        "value": "+357"
+    },
+    {
+        "search": "358",
+        "value": "+358"
+    },
+    {
+        "search": "359",
+        "value": "+359"
+    },
+    {
+        "search": "370",
+        "value": "+370"
+    },
+    {
+        "search": "371",
+        "value": "+371"
+    },
+    {
+        "search": "372",
+        "value": "+372"
+    },
+    {
+        "search": "373",
+        "value": "+373"
+    },
+    {
+        "search": "374",
+        "value": "+374"
+    },
+    {
+        "search": "375",
+        "value": "+375"
+    },
+    {
+        "search": "376",
+        "value": "+376"
+    },
+    {
+        "search": "377",
+        "value": "+377"
+    },
+    {
+        "search": "378",
+        "value": "+378"
+    },
+    {
+        "search": "380",
+        "value": "+380"
+    },
+    {
+        "search": "381",
+        "value": "+381"
+    },
+    {
+        "search": "382",
+        "value": "+382"
+    },
+    {
+        "search": "385",
+        "value": "+385"
+    },
+    {
+        "search": "386",
+        "value": "+386"
+    },
+    {
+        "search": "387",
+        "value": "+387"
+    },
+    {
+        "search": "389",
+        "value": "+389"
+    },
+    {
+        "search": "420",
+        "value": "+420"
+    },
+    {
+        "search": "421",
+        "value": "+421"
+    },
+    {
+        "search": "423",
+        "value": "+423"
+    },
+    {
+        "search": "500",
+        "value": "+500"
+    },
+    {
+        "search": "501",
+        "value": "+501"
+    },
+    {
+        "search": "502",
+        "value": "+502"
+    },
+    {
+        "search": "503",
+        "value": "+503"
+    },
+    {
+        "search": "504",
+        "value": "+504"
+    },
+    {
+        "search": "505",
+        "value": "+505"
+    },
+    {
+        "search": "506",
+        "value": "+506"
+    },
+    {
+        "search": "507",
+        "value": "+507"
+    },
+    {
+        "search": "508",
+        "value": "+508"
+    },
+    {
+        "search": "509",
+        "value": "+509"
+    },
+    {
+        "search": "590",
+        "value": "+590"
+    },
+    {
+        "search": "591",
+        "value": "+591"
+    },
+    {
+        "search": "592",
+        "value": "+592"
+    },
+    {
+        "search": "593",
+        "value": "+593"
+    },
+    {
+        "search": "594",
+        "value": "+594"
+    },
+    {
+        "search": "595",
+        "value": "+595"
+    },
+    {
+        "search": "596",
+        "value": "+596"
+    },
+    {
+        "search": "597",
+        "value": "+597"
+    },
+    {
+        "search": "598",
+        "value": "+598"
+    },
+    {
+        "search": "599",
+        "value": "+599"
+    },
+    {
+        "search": "670",
+        "value": "+670"
+    },
+    {
+        "search": "672",
+        "value": "+672"
+    },
+    {
+        "search": "673",
+        "value": "+673"
+    },
+    {
+        "search": "674",
+        "value": "+674"
+    },
+    {
+        "search": "675",
+        "value": "+675"
+    },
+    {
+        "search": "676",
+        "value": "+676"
+    },
+    {
+        "search": "677",
+        "value": "+677"
+    },
+    {
+        "search": "678",
+        "value": "+678"
+    },
+    {
+        "search": "679",
+        "value": "+679"
+    },
+    {
+        "search": "680",
+        "value": "+680"
+    },
+    {
+        "search": "681",
+        "value": "+681"
+    },
+    {
+        "search": "682",
+        "value": "+682"
+    },
+    {
+        "search": "683",
+        "value": "+683"
+    },
+    {
+        "search": "685",
+        "value": "+685"
+    },
+    {
+        "search": "686",
+        "value": "+686"
+    },
+    {
+        "search": "687",
+        "value": "+687"
+    },
+    {
+        "search": "688",
+        "value": "+688"
+    },
+    {
+        "search": "689",
+        "value": "+689"
+    },
+    {
+        "search": "690",
+        "value": "+690"
+    },
+    {
+        "search": "691",
+        "value": "+691"
+    },
+    {
+        "search": "692",
+        "value": "+692"
+    },
+    {
+        "search": "850",
+        "value": "+850"
+    },
+    {
+        "search": "852",
+        "value": "+852"
+    },
+    {
+        "search": "853",
+        "value": "+853"
+    },
+    {
+        "search": "855",
+        "value": "+855"
+    },
+    {
+        "search": "856",
+        "value": "+856"
+    },
+    {
+        "search": "880",
+        "value": "+880"
+    },
+    {
+        "search": "886",
+        "value": "+886"
+    },
+    {
+        "search": "960",
+        "value": "+960"
+    },
+    {
+        "search": "961",
+        "value": "+961"
+    },
+    {
+        "search": "962",
+        "value": "+962"
+    },
+    {
+        "search": "963",
+        "value": "+963"
+    },
+    {
+        "search": "964",
+        "value": "+964"
+    },
+    {
+        "search": "965",
+        "value": "+965"
+    },
+    {
+        "search": "966",
+        "value": "+966"
+    },
+    {
+        "search": "967",
+        "value": "+967"
+    },
+    {
+        "search": "968",
+        "value": "+968"
+    },
+    {
+        "search": "970",
+        "value": "+970"
+    },
+    {
+        "search": "971",
+        "value": "+971"
+    },
+    {
+        "search": "972",
+        "value": "+972"
+    },
+    {
+        "search": "973",
+        "value": "+973"
+    },
+    {
+        "search": "974",
+        "value": "+974"
+    },
+    {
+        "search": "975",
+        "value": "+975"
+    },
+    {
+        "search": "976",
+        "value": "+976"
+    },
+    {
+        "search": "977",
+        "value": "+977"
+    },
+    {
+        "search": "992",
+        "value": "+992"
+    },
+    {
+        "search": "993",
+        "value": "+993"
+    },
+    {
+        "search": "994",
+        "value": "+994"
+    },
+    {
+        "search": "995",
+        "value": "+995"
+    },
+    {
+        "search": "996",
+        "value": "+996"
+    },
+    {
+        "search": "998",
+        "value": "+998"
+    },
+    {
+        "search": "1242",
+        "value": "+1242"
+    },
+    {
+        "search": "1246",
+        "value": "+1246"
+    },
+    {
+        "search": "1264",
+        "value": "+1264"
+    },
+    {
+        "search": "1268",
+        "value": "+1268"
+    },
+    {
+        "search": "1284",
+        "value": "+1284"
+    },
+    {
+        "search": "1340",
+        "value": "+1340"
+    },
+    {
+        "search": "1345",
+        "value": "+1345"
+    },
+    {
+        "search": "1441",
+        "value": "+1441"
+    },
+    {
+        "search": "1473",
+        "value": "+1473"
+    },
+    {
+        "search": "1649",
+        "value": "+1649"
+    },
+    {
+        "search": "1664",
+        "value": "+1664"
+    },
+    {
+        "search": "1670",
+        "value": "+1670"
+    },
+    {
+        "search": "1671",
+        "value": "+1671"
+    },
+    {
+        "search": "1684",
+        "value": "+1684"
+    },
+    {
+        "search": "1721",
+        "value": "+1721"
+    },
+    {
+        "search": "1758",
+        "value": "+1758"
+    },
+    {
+        "search": "1767",
+        "value": "+1767"
+    },
+    {
+        "search": "1784",
+        "value": "+1784"
+    },
+    {
+        "search": "1868",
+        "value": "+1868"
+    },
+    {
+        "search": "1869",
+        "value": "+1869"
+    },
+    {
+        "search": "1876",
+        "value": "+1876"
+    }
+]

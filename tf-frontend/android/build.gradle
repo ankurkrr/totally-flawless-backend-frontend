@@ -1,0 +1,119 @@
+buildscript {
+    ext {
+        googlePlayServicesVersion = "18.1.0"
+        buildToolsVersion = "34.0.0"
+        minSdkVersion = 23
+        compileSdkVersion = 35
+        targetSdkVersion = 35
+        ndkVersion = "25.1.8937393"
+        kotlinVersion = "1.8.22"
+    }
+
+    repositories {
+        google()
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath("com.android.tools.build:gradle:8.6.0")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
+
+    }
+}
+
+
+subprojects {
+    project.plugins.withId("org.jetbrains.kotlin.android") {
+        tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+            kotlinOptions {
+                jvmTarget = "17"
+                // Force Kotlin language/api versions compatible with Kotlin 1.8.22
+                languageVersion = "1.8"
+                apiVersion = "1.8"
+
+                // Sanitize freeCompilerArgs: remove flags that opt-in to Kotlin 1.9/K2
+                def currentArgs = freeCompilerArgs ?: []
+                freeCompilerArgs = currentArgs.findAll { arg ->
+                    !(arg == '-Xuse-k2' || arg.startsWith('-language-version') || arg.startsWith('-api-version') || arg.startsWith('-Xlanguage-version') || arg.startsWith('-Xapi-version'))
+                }
+            }
+        }
+    }
+    
+    // Strict version cleanup for Google Play Services
+    project.configurations.all {
+        resolutionStrategy {
+            eachDependency { details ->
+                if (details.requested.group == 'com.google.android.gms') {
+                    // Granular version fixing to avoid missing artifact errors
+                    if (details.requested.name == 'play-services-location') {
+                        details.useVersion "21.0.1"
+                    } else if (details.requested.name == 'play-services-maps') {
+                        details.useVersion "18.2.0"
+                    } else if (details.requested.name == 'play-services-base') {
+                        details.useVersion "18.5.0" 
+                    } else if (details.requested.name == 'play-services-cloud-messaging') {
+                        details.useVersion "17.1.0"
+                    } else if (details.requested.name == 'play-services-stats') {
+                        details.useVersion "17.1.0"
+                    } else if (!details.requested.name.contains('multidex') && !details.requested.name.contains('gcm')) {
+                        // Default fallback for other common 18.x libs (auth, identity, etc)
+                        // Only apply if it looks like an 18.x dep, otherwise let it float to avoid breaking new libs
+                        // details.useVersion "18.1.0" // Commented out to reduce risk of breaking other weird versions
+                    }
+                }
+            }
+        }
+    }
+}
+subprojects {
+    afterEvaluate { project ->
+        if (project.hasProperty("android")) {
+            project.android.buildFeatures {
+                buildConfig true
+            }
+        }
+    }
+}
+subprojects {
+    afterEvaluate { project ->
+        try {
+            // Global exclusion of deprecated/removed Google libraries
+            if (project.hasProperty("android")) {
+                project.configurations.all {
+                     exclude group: 'com.google.android.gms', module: 'play-services-iid'
+                     exclude group: 'com.google.android.gms', module: 'play-services-gcm'
+                }
+            }
+            
+            def path = project.projectDir.path.replaceAll('\\\\','/')
+            if (path.contains("react-native-screens")) {
+                project.dependencies.add('implementation', "androidx.appcompat:appcompat:1.7.0")
+            }
+        } catch (ignored) {
+        }
+    }
+}
+subprojects {
+    afterEvaluate { project ->
+        if (project.hasProperty("android")) {
+
+            // ✅ Enable BuildConfig for legacy RN libs
+            project.android.buildFeatures {
+                buildConfig true
+            }
+
+            // ✅ Auto-assign namespace if missing (AGP 8 fix)
+            if (project.android.namespace == null) {
+                def manifestFile = project.android.sourceSets.main.manifest.srcFile
+                if (manifestFile.exists()) {
+                    def manifestText = manifestFile.getText('UTF-8')
+                    def matcher = manifestText =~ /package="([^"]+)"/
+                    if (matcher.find()) {
+                        project.android.namespace = matcher.group(1)
+                    }
+                }
+            }
+        }
+    }
+}

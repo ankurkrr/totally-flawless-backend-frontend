@@ -1,0 +1,96 @@
+plugins {
+    id "com.android.application"
+    id "org.jetbrains.kotlin.android"
+    id "com.facebook.react"
+}
+
+react {
+    entryFile.set(file("index.js"))
+}
+
+
+
+
+android {
+    namespace "com.flawless"
+
+    compileSdkVersion 35
+    buildToolsVersion "34.0.0"
+
+    // ✅ REQUIRED for geolocation & legacy RN libs
+    buildFeatures {
+        buildConfig true
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    defaultConfig {
+        applicationId "com.flawless"
+        minSdkVersion 23
+        targetSdkVersion 35
+        versionCode 5
+        versionName "1.05"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    signingConfigs {
+    debug {
+        storeFile file("debug.keystore")
+        storePassword "android"
+        keyAlias "androiddebugkey"
+        keyPassword "android"
+    }
+    }
+
+
+    buildTypes {
+        debug {
+            signingConfig signingConfigs.debug
+        }
+        release {
+            signingConfig signingConfigs.debug
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile(
+                    "proguard-android.txt"
+            ), "proguard-rules.pro"
+        }
+    }
+
+    configurations.all {
+        exclude group: 'com.google.android.gms', module: 'play-services-iid'
+        exclude group: 'com.google.android.gms', module: 'play-services-gcm'
+    }
+}
+
+dependencies {
+    implementation "androidx.appcompat:appcompat:1.7.0"
+    
+    // Force specific versions to override transitive ancient dependencies
+    implementation "com.google.android.gms:play-services-base:18.1.0"
+
+
+    // The version of react-native is set by the React Native Gradle Plugin
+    implementation("com.facebook.react:react-android")
+    
+
+    if (project.ext.has("hermesEnabled") && hermesEnabled.toBoolean()) {
+    implementation("com.facebook.react:hermes-android")
+    } else {
+    implementation("org.webkit:android-jsc:+")
+    }
+
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+    androidTestImplementation 'androidx.test.uiautomator:uiautomator:2.3.0'
+    androidTestImplementation 'androidx.test:rules:1.5.0'
+
+}
+
+// Apply native modules
+apply from: file("../../node_modules/react-native/node_modules/@react-native-community/cli-platform-android/native_modules.gradle")
+applyNativeModulesAppBuildGradle(project)
+
+

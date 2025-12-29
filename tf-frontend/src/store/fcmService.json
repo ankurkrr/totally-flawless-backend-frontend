@@ -1,0 +1,3 @@
+{
+    "removed": "Firebase service account removed from client. Server must handle FCM with Admin SDK and keep keys in environment variables."
+}

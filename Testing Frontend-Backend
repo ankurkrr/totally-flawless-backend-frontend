@@ -1,0 +1,19 @@
+/**
+ * LOCAL DEV NOTE:
+ * Admin routes & cron jobs are disabled to avoid Firebase Admin dependency.
+ * DO NOT COMMIT THESE CHANGES.
+ */
+
+ http://192.168.1.11:3000
+
+
+ Documentaion: 
+ Frontend Integration Status:
+- API contracts validated
+- Requests/responses verified
+- No frontend-side blockers
+
+Backend Infra Status:
+- DB logging disabled/skipped locally
+- Firebase skipped locally
+- To be validated by backend owner

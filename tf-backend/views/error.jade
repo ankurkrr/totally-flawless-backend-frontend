@@ -1,0 +1,10 @@
+extends layout
+
+block content
+  h1= message
+  h2= error.status
+  - var isDevelopment = process.env.NODE_ENV === 'development'
+  if isDevelopment
+  pre #{error.stack}
+  else
+    p An error occurred. Please contact support if the problem persists.

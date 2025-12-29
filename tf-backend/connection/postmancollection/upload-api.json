@@ -1,0 +1,291 @@
+{
+	"info": {
+		"_postman_id": "upload-api-collection",
+		"name": "Upload Credentials API",
+		"description": "API endpoints for temporary S3 upload credentials",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "0. Get OTP (Create User First)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"if (pm.response.code === 200) {",
+							"    const jsonData = pm.response.json();",
+							"    if (jsonData.id) {",
+							"        pm.environment.set('user_id_temp', jsonData.id);",
+							"        console.log('User ID saved:', jsonData.id);",
+							"        console.log('Use OTP from TEST_OTP env var (default: 1111)');",
+							"    }",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/auth/get-otp?phone=1234567890&countryCode=1",
+					"host": ["{{base_url}}"],
+					"path": ["api", "auth", "get-otp"],
+					"query": [
+						{
+							"key": "phone",
+							"value": "1234567890",
+							"description": "Use test phone from TEST_PHONE_NUMBERS env var"
+						},
+						{
+							"key": "countryCode",
+							"value": "1",
+							"description": "Country code (1 for US, 91 for India, etc.)"
+						}
+					]
+				},
+				"description": "STEP 1: Get OTP and create user. This creates the user in database and sets OTP. Use test phone numbers from TEST_PHONE_NUMBERS env var. OTP will be TEST_OTP (default: 1111) for test phones."
+			},
+			"response": []
+		},
+		{
+			"name": "1. Get JWT Token (After OTP)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"if (pm.response.code === 200) {",
+							"    const jsonData = pm.response.json();",
+							"    if (jsonData.data && jsonData.data.accessToken) {",
+							"        pm.environment.set('jwt_token', jsonData.data.accessToken);",
+							"        pm.environment.set('user_id', jsonData.data._id || jsonData.data.id);",
+							"        console.log('✅ JWT Token saved!');",
+							"    }",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"phone\": \"1234567890\",\n  \"otp\": \"1111\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/api/auth/token",
+					"host": ["{{base_url}}"],
+					"path": ["api", "auth", "token"]
+				},
+				"description": "STEP 2: Get JWT token after getting OTP. Use the same phone number and OTP from step 0. For test phones, OTP is usually 1111 (from TEST_OTP env var)."
+			},
+			"response": []
+		},
+		{
+			"name": "2. Request Upload Credentials - Profile Image",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt_token}}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"purpose\": \"PROFILE_IMAGE\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/api/uploads/credentials",
+					"host": ["{{base_url}}"],
+					"path": ["api", "uploads", "credentials"]
+				},
+				"description": "Request temporary AWS credentials for uploading profile images. Credentials expire in 15 minutes."
+			},
+			"response": [],
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"if (pm.response.code === 200) {",
+							"    const jsonData = pm.response.json();",
+							"    if (jsonData.data) {",
+							"        pm.environment.set('temp_access_key', jsonData.data.accessKeyId);",
+							"        pm.environment.set('temp_secret_key', jsonData.data.secretAccessKey);",
+							"        pm.environment.set('temp_session_token', jsonData.data.sessionToken);",
+							"        pm.environment.set('s3_bucket', jsonData.data.bucket);",
+							"        pm.environment.set('s3_region', jsonData.data.region);",
+							"        pm.environment.set('s3_prefix', jsonData.data.prefix);",
+							"        pm.environment.set('credentials_expires_at', jsonData.data.expiresAt);",
+							"        ",
+							"        console.log('✅ Credentials saved to environment variables');",
+							"        console.log('Prefix:', jsonData.data.prefix);",
+							"        console.log('Expires at:', jsonData.data.expiresAt);",
+							"    }",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			]
+		},
+		{
+			"name": "3. Request Upload Credentials - Booking Media",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt_token}}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"purpose\": \"BOOKING_MEDIA\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/api/uploads/credentials",
+					"host": ["{{base_url}}"],
+					"path": ["api", "uploads", "credentials"]
+				},
+				"description": "Request temporary AWS credentials for uploading booking media."
+			},
+			"response": []
+		},
+		{
+			"name": "4. Complete Upload - Profile Image",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt_token}}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"s3Key\": \"users/{{user_id}}/profile/{{$timestamp}}_test.jpg\",\n  \"purpose\": \"PROFILE_IMAGE\",\n  \"fileName\": \"test.jpg\",\n  \"fileSize\": 102400,\n  \"contentType\": \"image/jpeg\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/api/uploads/complete",
+					"host": ["{{base_url}}"],
+					"path": ["api", "uploads", "complete"]
+				},
+				"description": "Complete upload after uploading file to S3. Replace s3Key with actual uploaded file key."
+			},
+			"response": []
+		},
+		{
+			"name": "5. Complete Upload - Booking Media",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt_token}}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"s3Key\": \"users/{{user_id}}/bookings/{{$timestamp}}_media.jpg\",\n  \"purpose\": \"BOOKING_MEDIA\",\n  \"fileName\": \"media.jpg\",\n  \"fileSize\": 204800,\n  \"contentType\": \"image/jpeg\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/api/uploads/complete",
+					"host": ["{{base_url}}"],
+					"path": ["api", "uploads", "complete"]
+				},
+				"description": "Complete booking media upload. Replace s3Key with actual uploaded file key."
+			},
+			"response": []
+		},
+		{
+			"name": "6. Get User Uploads",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt_token}}"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/api/uploads",
+					"host": ["{{base_url}}"],
+					"path": ["api", "uploads"]
+				},
+				"description": "Get all uploads for the authenticated user."
+			},
+			"response": []
+		},
+		{
+			"name": "7. Get User Uploads - Filtered by Purpose",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt_token}}"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/api/uploads?purpose=PROFILE_IMAGE",
+					"host": ["{{base_url}}"],
+					"path": ["api", "uploads"],
+					"query": [
+						{
+							"key": "purpose",
+							"value": "PROFILE_IMAGE"
+						}
+					]
+				},
+				"description": "Get user uploads filtered by purpose (PROFILE_IMAGE or BOOKING_MEDIA)."
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:3000",
+			"type": "string"
+		},
+		{
+			"key": "jwt_token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "user_id",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
+

@@ -1,0 +1,983 @@
+{
+	"info": {
+		"_postman_id": "95bd3deb-3033-4dbb-8865-ae33cc6dbb3b",
+		"name": "flawless",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "20794526",
+		"_collection_link": "https://ewebinfoway.postman.co/workspace/raj~d4ac2d7e-7473-40ec-8872-bf49bdeb9eda/collection/20794526-95bd3deb-3033-4dbb-8865-ae33cc6dbb3b?action=share&source=collection_link&creator=20794526"
+	},
+	"item": [
+		{
+			"name": "Bookings",
+			"item": [
+				{
+					"name": "Get Bookings User wise",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/get-bookings?userId=3697f741-fae7-4853-a3ac-39d5b90a3089",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"get-bookings"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "3697f741-fae7-4853-a3ac-39d5b90a3089"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Bookin status,user and bookingtype wise",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/get-bookingsdata?userId=3697f741-fae7-4853-a3ac-39d5b90a3089&bookingType=later",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"get-bookingsdata"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "3697f741-fae7-4853-a3ac-39d5b90a3089"
+								},
+								{
+									"key": "status",
+									"value": "confirmed",
+									"disabled": true
+								},
+								{
+									"key": "bookingType",
+									"value": "later"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Gratuity",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"cartId\":\"9adc09ce-f77a-43e8-b6eb-9b3a04118fc2\",\n    \"itemId\":\"9176ccd0-8b32-4b51-a6c1-92dd6c18fb7a\",\n    \"gratuity\":\"120\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/update-gratuity",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"update-gratuity"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Rating",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"cartId\":\"9adc09ce-f77a-43e8-b6eb-9b3a04118fc2\",\n    \"itemId\":\"9176ccd0-8b32-4b51-a6c1-92dd6c18fb7a\",\n    \"rating\":\"4\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/update-rating",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"update-rating"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "New Request",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/get-totalgratuity",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"get-totalgratuity"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User Delete upcoming Booking",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/user-delete-upcoming-booking?userId=9f897c77-c3f5-4e0d-a606-61e68930bded&bookingId=e5671fa5-d0c0-4347-a628-80754b861aa0&cartItemId=318191a3-1fe5-4cf6-a7c2-b908a879bb49",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"user-delete-upcoming-booking"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "9f897c77-c3f5-4e0d-a606-61e68930bded"
+								},
+								{
+									"key": "bookingId",
+									"value": "e5671fa5-d0c0-4347-a628-80754b861aa0"
+								},
+								{
+									"key": "cartItemId",
+									"value": "318191a3-1fe5-4cf6-a7c2-b908a879bb49"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Artist",
+			"item": [
+				{
+					"name": "Get ArtistBookings",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/get-artistbooking?artistId=0d4f2aba-390c-4e67-8f17-df9d1e6bd7fd&status=pending&bookingType=later",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"get-artistbooking"
+							],
+							"query": [
+								{
+									"key": "artistId",
+									"value": "0d4f2aba-390c-4e67-8f17-df9d1e6bd7fd"
+								},
+								{
+									"key": "status",
+									"value": "pending"
+								},
+								{
+									"key": "bookingType",
+									"value": "later"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Booking Status Change by artist",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"artistId\": \"0d4f2aba-390c-4e67-8f17-df9d1e6bd7fd\",\n    \"bookingId\": \"08b41bdb-7433-446e-9434-d14dac0c0f8c\",\n    \"newStatus\": \"pending\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/artist-change-status",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"artist-change-status"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "get-userdetails",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://flawlessapi.uatdemo.in/get-userdetails?userId=9cf6966c-70de-4d20-bfdb-a991033d1338",
+					"protocol": "https",
+					"host": [
+						"flawlessapi",
+						"uatdemo",
+						"in"
+					],
+					"path": [
+						"get-userdetails"
+					],
+					"query": [
+						{
+							"key": "userId",
+							"value": "9cf6966c-70de-4d20-bfdb-a991033d1338"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create-user",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"firstName\": \"\",\n    \"lastName\": \"\",\n    \"email\": \"\",\n    \"phone\": \"\",\n    \"address\": \"\",\n    \"imgUrl\": \"\",\n    \"countryCode\":\"\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://flawlessapi.uatdemo.in/create-user",
+					"protocol": "https",
+					"host": [
+						"flawlessapi",
+						"uatdemo",
+						"in"
+					],
+					"path": [
+						"create-user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update-user",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"id\": \"12345\",\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"email\": \"john.doe@example.com\",\n  \"address\": \"123 Main Street, Springfield\",\n  \"imgUrl\": \"https://example.com/profile.jpg\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://flawlessapi.uatdemo.in/update-user",
+					"protocol": "https",
+					"host": [
+						"flawlessapi",
+						"uatdemo",
+						"in"
+					],
+					"path": [
+						"update-user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update-user-gratuity",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"id\": \"12345\",\n  \"gratuity\": 5000\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://flawlessapi.uatdemo.in/update-user-gratuity",
+					"protocol": "https",
+					"host": [
+						"flawlessapi",
+						"uatdemo",
+						"in"
+					],
+					"path": [
+						"update-user-gratuity"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update-artist",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"id\": \"12345\",\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"email\": \"john.doe@example.com\",\n  \"address\": \"123 Main Street, Springfield\",\n  \"geocode\": \"\",\n  \"city\": \"San Francisco\",\n  \"state\": \"California\",\n  \"businessType\": \"Retail\",\n  \"images\": [\n    \"https://example.com/image1.jpg\",\n    \"https://example.com/image2.jpg\"\n  ],\n  \"licenceUrl\": \"https://example.com/licence.pdf\",\n  \"videoUrl\": \"https://example.com/promo.mp4\",\n  \"sin\": \"123-456-789\",\n  \"facebook\": \"https://facebook.com/johndoe\",\n  \"instagram\": \"https://instagram.com/johndoe\",\n  \"mobile\": \"1234567890\",\n  \"countryCode\": \"+1\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://flawlessapi.uatdemo.in/update-artist",
+					"protocol": "https",
+					"host": [
+						"flawlessapi",
+						"uatdemo",
+						"in"
+					],
+					"path": [
+						"update-artist"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update-artist-video",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"id\": \"12345\",\n  \"videos\": [\n    \"https://example.com/image1.jpg\",\n    \"https://example.com/image2.jpg\"\n  ]\n\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://flawlessapi.uatdemo.in/update-artist-video",
+					"protocol": "https",
+					"host": [
+						"flawlessapi",
+						"uatdemo",
+						"in"
+					],
+					"path": [
+						"update-artist-video"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get-artistdetails",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://flawlessapi.uatdemo.in/get-artistdetails?artistId=9cf6966c-70de-4d20-bfdb-a991033d1338",
+					"protocol": "https",
+					"host": [
+						"flawlessapi",
+						"uatdemo",
+						"in"
+					],
+					"path": [
+						"get-artistdetails"
+					],
+					"query": [
+						{
+							"key": "artistId",
+							"value": "9cf6966c-70de-4d20-bfdb-a991033d1338"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create-artist",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"email\": \"john.doe@example.com\",\n  \"phone\": \"9876543210\",\n  \"address\": \"789 Pine Street, Springfield\",\n  \"geocode\": \"\",\n  \"city\": \"Los Angeles\",\n  \"state\": \"California\",\n  \"businessType\": \"Food & Beverage\",\n  \"videoUrl\": \"https://example.com/introduction.mp4\",\n  \"countryCode\": \"+1\"\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://flawlessapi.uatdemo.in/create-artist",
+					"protocol": "https",
+					"host": [
+						"flawlessapi",
+						"uatdemo",
+						"in"
+					],
+					"path": [
+						"create-artist"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get-otp",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://flawlessapi.uatdemo.in/get-otp?phone=9975464418&countryCode=91",
+					"protocol": "https",
+					"host": [
+						"flawlessapi",
+						"uatdemo",
+						"in"
+					],
+					"path": [
+						"get-otp"
+					],
+					"query": [
+						{
+							"key": "phone",
+							"value": "9975464418"
+						},
+						{
+							"key": "countryCode",
+							"value": "91"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "token",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"id\": \"12345\",\n  \"otp\": \"67890\",\n  \"userType\": \"admin\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://flawlessapi.uatdemo.in/token",
+					"protocol": "https",
+					"host": [
+						"flawlessapi",
+						"uatdemo",
+						"in"
+					],
+					"path": [
+						"token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get-categories-with-services",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://flawlessapi.uatdemo.in/get-categories-with-services",
+					"protocol": "https",
+					"host": [
+						"flawlessapi",
+						"uatdemo",
+						"in"
+					],
+					"path": [
+						"get-categories-with-services"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get-levels-with-prices",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://flawlessapi.uatdemo.in/get-levels-with-prices?serviceId=1",
+					"protocol": "https",
+					"host": [
+						"flawlessapi",
+						"uatdemo",
+						"in"
+					],
+					"path": [
+						"get-levels-with-prices"
+					],
+					"query": [
+						{
+							"key": "serviceId",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get-addresses",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://flawlessapi.uatdemo.in/get-addresses?userId=1",
+					"protocol": "https",
+					"host": [
+						"flawlessapi",
+						"uatdemo",
+						"in"
+					],
+					"path": [
+						"get-addresses"
+					],
+					"query": [
+						{
+							"key": "userId",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "add-address",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"userId\": \"12345\",\n  \"street\": \"456 Elm Street\",\n  \"city\": \"New York\",\n  \"state\": \"New York\",\n  \"pincode\": \"10001\",\n  \"geocode\": \"\",\n  \"isDefault\": true\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://flawlessapi.uatdemo.in/add-address",
+					"protocol": "https",
+					"host": [
+						"flawlessapi",
+						"uatdemo",
+						"in"
+					],
+					"path": [
+						"add-address"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update-address",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"id\": \"12345\",\n  \"street\": \"456 Elm Street\",\n  \"city\": \"New York\",\n  \"state\": \"New York\",\n  \"pincode\": \"10001\",\n  \"geocode\": \"\",\n  \"isDefault\": true\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://flawlessapi.uatdemo.in/update-address",
+					"protocol": "https",
+					"host": [
+						"flawlessapi",
+						"uatdemo",
+						"in"
+					],
+					"path": [
+						"update-address"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get-subcategories-by-serviceid",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://flawlessapi.uatdemo.in/get-subcategories-by-serviceid?serviceId=1",
+					"protocol": "https",
+					"host": [
+						"flawlessapi",
+						"uatdemo",
+						"in"
+					],
+					"path": [
+						"get-subcategories-by-serviceid"
+					],
+					"query": [
+						{
+							"key": "serviceId",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete-address",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://flawlessapi.uatdemo.in/delete-address?addressId=1",
+					"protocol": "https",
+					"host": [
+						"flawlessapi",
+						"uatdemo",
+						"in"
+					],
+					"path": [
+						"delete-address"
+					],
+					"query": [
+						{
+							"key": "addressId",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get-artist-otp",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://flawlessapi.uatdemo.in/get-artist-otp?phone=&countryCode=",
+					"protocol": "https",
+					"host": [
+						"flawlessapi",
+						"uatdemo",
+						"in"
+					],
+					"path": [
+						"get-artist-otp"
+					],
+					"query": [
+						{
+							"key": "phone",
+							"value": ""
+						},
+						{
+							"key": "countryCode",
+							"value": ""
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get-cart",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://flawlessapi.uatdemo.in/get-cart?userId=1",
+					"protocol": "https",
+					"host": [
+						"flawlessapi",
+						"uatdemo",
+						"in"
+					],
+					"path": [
+						"get-cart"
+					],
+					"query": [
+						{
+							"key": "userId",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "cart",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"actionType\":\"\",// A , U , D , C\n  \"userId\": \"12345\",\n  \"totalAmount\": 150.75,\n  \"bookingFee\": 15.00,\n  \"addressId\": \"67890\",\n  \"totalGratuity\": 20.00,\n  \"later\": false,\n  \"now\": true,\n  \"bookingTime\": \"2025-01-03 14:30:00\"\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://flawlessapi.uatdemo.in/cart",
+					"protocol": "https",
+					"host": [
+						"flawlessapi",
+						"uatdemo",
+						"in"
+					],
+					"path": [
+						"cart"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get-bookings",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://flawlessapi.uatdemo.in/get-bookings?userId=1",
+					"protocol": "https",
+					"host": [
+						"flawlessapi",
+						"uatdemo",
+						"in"
+					],
+					"path": [
+						"get-bookings"
+					],
+					"query": [
+						{
+							"key": "userId",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getAddressById",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://flawlessapi.uatdemo.in/get-cart?id=1",
+					"protocol": "https",
+					"host": [
+						"flawlessapi",
+						"uatdemo",
+						"in"
+					],
+					"path": [
+						"get-cart"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getIsEmailExist",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://flawlessapi.uatdemo.in/getIsEmailExist?emailId=&phone",
+					"protocol": "https",
+					"host": [
+						"flawlessapi",
+						"uatdemo",
+						"in"
+					],
+					"path": [
+						"getIsEmailExist"
+					],
+					"query": [
+						{
+							"key": "emailId",
+							"value": ""
+						},
+						{
+							"key": "phone",
+							"value": null
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create-booking",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"userId\": \"12345\",\n  \"cartId\": \"67890\",\n  \"totalAmount\": 200.00,\n  \"payableAmount\": 180.00\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://flawlessapi.uatdemo.in/create-booking",
+					"protocol": "https",
+					"host": [
+						"flawlessapi",
+						"uatdemo",
+						"in"
+					],
+					"path": [
+						"create-booking"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "confirm-booking",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"transactionId\": \"abc123xyz\",\n  \"bookingId\": \"booking987\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://flawlessapi.uatdemo.in/confirm-booking",
+					"protocol": "https",
+					"host": [
+						"flawlessapi",
+						"uatdemo",
+						"in"
+					],
+					"path": [
+						"confirm-booking"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create-signup",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"first_name\": \"John\",\n  \"last_name\": \"Doe\",\n  \"email\": \"john.doe@example.com\",\n  \"mobile\": \"9876543210\",\n  \"address\": \"123 Maple Street, Springfield\",\n  \"business_type\": \"Retail\",\n  \"sin\": \"123-456-789\",\n  \"facebook\": \"https://facebook.com/johndoe\",\n  \"instagram\": \"https://instagram.com/johndoe\"\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://flawlessapi.uatdemo.in/create-signup",
+					"protocol": "https",
+					"host": [
+						"flawlessapi",
+						"uatdemo",
+						"in"
+					],
+					"path": [
+						"create-signup"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "url",
+			"value": "http://127.0.0.1:8000",
+			"type": "string"
+		}
+	]
+}
