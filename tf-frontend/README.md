@@ -94,9 +94,16 @@ If you can't get this to work, see the [Troubleshooting](https://reactnative.dev
 
 If Android build fails with:
 
-- `Unsupported class file major version 67`
+- `Unsupported class file major version 67` (Java 23)
+- `Unsupported class file major version 68` (Java 24)
 
-Your Gradle is running on **Java 23**. React Native `0.73.x` with Android Gradle Plugin `8.x` expects **Java 17**.
+Your Gradle is running on a newer Java (e.g. **Java 23/24**). React Native `0.73.x` with Android Gradle Plugin `8.x` expects **Java 17**.
+
+Quick fix (recommended): use the repo script that switches to Java 17 for this run and then launches Android:
+
+```bash
+npm run android:java17
+```
 
 On macOS, switch your shell to Java 17 before running Android:
 
