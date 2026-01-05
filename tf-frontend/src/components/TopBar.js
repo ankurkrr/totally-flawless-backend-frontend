@@ -3,6 +3,7 @@ import * as React from 'react';
 import { Icon } from '@rneui/base';
 import Icons from 'react-native-vector-icons/Ionicons'
 import { useNavigation } from '@react-navigation/native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import images from '../constants/images';
 import { COLORS, FONTS } from '../style/theme';
 import { ms, mvs } from 'react-native-size-matters';
@@ -14,6 +15,7 @@ import UserContext from '../screens/UserContext';
 const TopBar = props => {
   const { drawer } = props;
   const navigation = useNavigation();
+  const insets = useSafeAreaInsets();
 
   const { cartItems, isAddedCart, isGuest } = useSelector(state => state.AppReducer);
   const { user } = React.useContext(UserContext);
@@ -49,7 +51,7 @@ const TopBar = props => {
   }
 
   return (
-    <View style={{ backgroundColor: COLORS.bgPink, paddingVertical: 10, zIndex: 99 }}>
+    <View style={{ backgroundColor: COLORS.bgPink, paddingTop: insets.top, paddingBottom: 10, zIndex: 99 }}>
       <View
         style={{
           flexDirection: 'row',
