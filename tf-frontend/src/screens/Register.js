@@ -14,7 +14,10 @@ import {
   ActivityIndicator,
   Modal,
   KeyboardAvoidingView,
+  Keyboard,
+  StatusBar,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import axios from 'axios';
 import Toast from 'react-native-toast-message';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -444,40 +447,40 @@ const Register = ({ navigation }) => {
     getLocalStorage();
   }, []);
 
+  const dismissKeyboard = () => {
+    Keyboard.dismiss();
+  };
+
   return (
-    <KeyboardAwareScrollView
-      keyboardShouldPersistTaps="always"
-      style={{ flex: 1, backgroundColor: '#FFF', }}
-    // automaticallyAdjustKeyboardInsets={true}
-    >
-      <View
-        style={{
-          width: '100%',
-          flexDirection: 'row',
-          justifyContent: 'flex-start',
-          alignItems: 'center',
-          marginTop: Platform.OS == "ios" ? 30 : 10,
-          marginHorizontal: 15,
-          marginBottom: 5,
-          zIndex: 1
-        }}>
-        <View>
+    <SafeAreaView style={styles.safeArea} edges={['top', 'left', 'right', 'bottom']}>
+      <StatusBar barStyle="dark-content" backgroundColor="#FFF" />
+      {/* Top App Bar with Back Button */}
+      <View style={styles.topAppBar}>
+        <TouchableOpacity
+          onPress={() => changeNavigation('Auth')}
+          style={styles.backButton}
+          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+        >
           <Icon
             color="#000"
             name="arrow-back-ios"
-            onPress={() => changeNavigation('Auth')}
             size={25}
             type="material"
           />
-        </View>
+        </TouchableOpacity>
       </View>
 
-      {/* {
-          Platform.OS =="ios" &&
-          <View style={{marginTop:mvs(10)}} />
-        } */}
-
-
+      <KeyboardAwareScrollView
+        keyboardShouldPersistTaps="handled"
+        style={styles.scrollView}
+        contentContainerStyle={styles.scrollViewContent}
+        enableOnAndroid={true}
+        enableAutomaticScroll={true}
+        extraScrollHeight={Platform.OS === 'ios' ? 20 : 100}
+        extraHeight={150}
+        showsVerticalScrollIndicator={true}
+        onScrollBeginDrag={dismissKeyboard}
+      >
       {isLoading && (
         <Modal animationType="fade" transparent={true}>
           <View
@@ -762,7 +765,7 @@ const Register = ({ navigation }) => {
         </TouchableOpacity>
         {!visible && <Toast />}
       </View>
-      {/* </KeyboardAvoidingView> */}
+      </KeyboardAwareScrollView>
 
       <Overlay isVisible={visible} onBackdropPress={toggleOverlay}>
         <View style={{ width: width / 1.5, padding: 10 }}>
@@ -795,19 +798,43 @@ const Register = ({ navigation }) => {
           </TouchableOpacity>
         </View>
       </Overlay>
-    </KeyboardAwareScrollView>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#FFF',
+  },
+  topAppBar: {
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    backgroundColor: '#FFF',
+  },
+  backButton: {
+    padding: 5,
+  },
+  scrollView: {
+    flex: 1,
+    backgroundColor: '#FFF',
+  },
+  scrollViewContent: {
+    flexGrow: 1,
+    paddingBottom: 40,
+  },
   container: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'flex-start',
     paddingHorizontal: 20,
-    paddingVertical: 30,
+    paddingTop: 10,
+    paddingBottom: 30,
     backgroundColor: 'white',
-    zIndex: 99,
   },
   logo: {
     height: height / 7,
