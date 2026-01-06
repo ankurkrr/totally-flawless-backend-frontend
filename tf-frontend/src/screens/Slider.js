@@ -11,6 +11,7 @@ import {
   Dimensions,
   Platform,
 } from 'react-native';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import Swiper from 'react-native-swiper';
 import { asynchEnums } from '../constants/enums';
 import { COLORS, FONTS, SIZES } from '../style/theme';
@@ -35,6 +36,7 @@ const Slider = ({ navigation }) => {
   const [loading, setLoading] = useState(false)
 
   const { user, updateUser } = useContext(UserContext);
+  const insets = useSafeAreaInsets();
 
   const indexChangeHandler = index => {
     if (index === 3) {
@@ -350,7 +352,7 @@ const Slider = ({ navigation }) => {
   }
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container} edges={['top', 'bottom']}>
 
       <Loader loading={loading} />
 
@@ -359,7 +361,7 @@ const Slider = ({ navigation }) => {
       {hideSkip && (
         <TouchableOpacity
           onPress={handleSkip}
-          style={styles.skipLink}
+          style={[styles.skipLink, { top: insets.top + 10 }]}
           testID="skipButton"
           nativeID="skipButton"
           accessibilityLabel="skipButton">
@@ -458,7 +460,7 @@ const Slider = ({ navigation }) => {
           <ScrollView
             style={{
               position: 'absolute',
-              top: 25,
+              top: 30,
               width: width,
               height: height / 1.15,
 
@@ -467,7 +469,7 @@ const Slider = ({ navigation }) => {
               justifyContent: 'flex-start',
               alignItems: 'center',
             }}>
-            <View style={{ paddingHorizontal: 30, paddingTop: 40 }}>
+            <View style={{ paddingHorizontal: 30, paddingTop: 20 }}>
               <View
                 style={{
                   flex: 1,
@@ -481,7 +483,7 @@ const Slider = ({ navigation }) => {
                   <Image
                     source={require('../assets/ladyGroup.jpg')}
                     style={{
-                      height: height / 1.8,
+                      height: height / 2,
                       width: SIZES.cardWidth,
                       alignSelf: 'center',
 
@@ -492,7 +494,7 @@ const Slider = ({ navigation }) => {
 
                 </View>
 
-                <View style={{ height: height / 4.2, paddingBottom: Platform.OS == "ios" ? ms(40) : ms(25), alignItems: 'center', justifyContent: 'center' }}>
+                <View style={{ height: height / 5, paddingBottom: Platform.OS == "ios" ? ms(40) : ms(25), alignItems: 'center', justifyContent: 'center' }}>
                   <Text style={[styles.paragraph, { fontSize: 18, }]}>
                     Hair & Makeup Services On-Demand
                   </Text>
@@ -793,13 +795,14 @@ const Slider = ({ navigation }) => {
 
 
 
-    </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: 'white',
   },
   skipLink: {
     position: 'absolute',

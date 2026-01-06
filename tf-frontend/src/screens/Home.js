@@ -10,6 +10,7 @@ import {
   PermissionsAndroid,
   RefreshControl,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import TopBar from '../components/TopBar';
 import BottomBar from '../components/BottomBar';
 import { Image } from '@rneui/base/dist/Image/Image';
@@ -31,6 +32,7 @@ import { COLORS, FONTS, SIZES } from '../style/theme';
 
 const Home = ({ navigation }) => {
   const { updateUser } = useContext(UserContext);
+  const insets = useSafeAreaInsets();
 
   // const APIURLBASE = 'http://164.52.197.9:3001';
   const width = Dimensions.get('window').width;
@@ -248,7 +250,7 @@ const Home = ({ navigation }) => {
   }
 
   return (
-    <View style={{ backgroundColor: '#FFF', flex: 1 }}>
+    <View style={{ backgroundColor: COLORS.bgPink, flex: 1 }}>
       <TopBar navigation={navigation} />
       <View style={{ flexGrow: 1, backgroundColor: '#FFF' }}>
         <ScrollView style={{ backgroundColor: 'white' }} refreshControl={
@@ -439,7 +441,7 @@ const Home = ({ navigation }) => {
             style={{
               flexDirection: 'column',
               paddingHorizontal: 10,
-              marginBottom: 160,
+              marginBottom: 160 + insets.bottom,
             }}>
             <View
               style={{

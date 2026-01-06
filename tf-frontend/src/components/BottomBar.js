@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Platform,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
@@ -20,6 +21,7 @@ import { asynchEnums } from '../constants/enums';
 
 const BottomBar = ({ navigation, page }) => {
   const dispatch = useDispatch();
+  const insets = useSafeAreaInsets();
   const [currentPage, setCurrentPage] = useState('Home');
   const { cartItems, isAddedCart,isGuest } = useSelector(state => state.AppReducer);
   // const APIBASEURL = 'http://164.52.197.9:3001';
@@ -92,7 +94,7 @@ const BottomBar = ({ navigation, page }) => {
         position: 'absolute',
         bottom: 0,
         width: '100%',
-        paddingBottom: Platform.OS == 'ios' ? 10 : 6,
+        paddingBottom: Math.max(insets.bottom, Platform.OS == 'ios' ? 10 : 6),
       }}>
       <View style={{ flexDirection: 'row', paddingHorizontal: 10 }}>
         <TouchableOpacity

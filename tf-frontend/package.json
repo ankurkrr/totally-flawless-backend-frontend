@@ -5,6 +5,8 @@
   "scripts": {
     "hyb": "npx react-native run-android && npx react-native run-ios",
     "android": "npx react-native run-android",
+    "android:stop": "cd android && ./gradlew --stop && cd ..",
+    "android:java17": "bash -lc 'export JAVA_HOME=\"$(/usr/libexec/java_home -v 17 2>/dev/null)\"; if [ -z \"$JAVA_HOME\" ]; then echo \"Java 17 not found. Install JDK 17 (or use Android Studio JBR) then retry.\"; exit 1; fi; export PATH=\"$JAVA_HOME/bin:$PATH\"; cd android && ./gradlew --stop && ./gradlew clean && cd ..; npx react-native run-android'",
     "build:android:offline": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res",
     "andClean": "cd android && ./gradlew clean && cd ..",
     "apk": "npx react-native run-android --mode=release",

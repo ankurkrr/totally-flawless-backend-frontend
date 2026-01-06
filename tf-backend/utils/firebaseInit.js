@@ -15,6 +15,63 @@
 require('dotenv').config();
 const admin = require('firebase-admin');
 
+/**
+ * Local-dev friendly behavior:
+ * - In production, Firebase credentials are required and missing creds should fail fast.
+ * - In non-production (development/test), allow booting without Firebase creds by returning
+ *   a lightweight stub so the API can run for endpoint testing without notifications.
+ */
+
+function isFirebaseConfigured() {
+    return !!(process.env.FIREBASE_PROJECT_ID && process.env.FIREBASE_PRIVATE_KEY && process.env.FIREBASE_CLIENT_EMAIL);
+}
+
+function shouldRequireFirebase() {
+    // Explicit override (useful in CI/containers)
+    if (process.env.REQUIRE_FIREBASE === 'true') return true;
+    if (process.env.DISABLE_FIREBASE === 'true') return false;
+    return process.env.NODE_ENV === 'production';
+}
+
+function createFirebaseDisabledStub() {
+    const disabledError = new Error('Firebase is disabled or not configured for this environment');
+    return {
+        apps: [],
+        // Keep shape similar to firebase-admin for call sites
+        messaging() {
+            return {
+                async send() {
+                    // mimic successful send without actually doing anything
+                    return 'firebase-disabled';
+                },
+                async sendMulticast(message) {
+                    const tokens = message?.tokens || [];
+                    return {
+                        successCount: 0,
+                        failureCount: tokens.length,
+                        responses: tokens.map(() => ({ success: false, error: disabledError })),
+                    };
+                },
+                async sendEachForMulticast(message) {
+                    const tokens = message?.tokens || [];
+                    return {
+                        successCount: 0,
+                        failureCount: tokens.length,
+                        responses: tokens.map(() => ({ success: false, error: disabledError })),
+                    };
+                },
+            };
+        },
+    };
+}
+
+// If Firebase is not required and not configured, export a stub so the server can boot.
+if (!isFirebaseConfigured() && !shouldRequireFirebase()) {
+    console.warn('⚠️  Firebase not configured. Continuing without Firebase (notifications disabled).');
+    module.exports = createFirebaseDisabledStub();
+    return;
+}
+
 // Check if Firebase is already initialized to avoid re-initialization errors
 if (!admin.apps.length) {
     // Get Firebase credentials from environment variables
@@ -28,7 +85,7 @@ if (!admin.apps.length) {
     const authProviderX509CertUrl = process.env.FIREBASE_AUTH_PROVIDER_X509_CERT_URL || 'https://www.googleapis.com/oauth2/v1/certs';
     const clientX509CertUrl = process.env.FIREBASE_CLIENT_X509_CERT_URL;
 
-    // Validate required environment variables - Firebase is REQUIRED
+    // Validate required environment variables
     if (!projectId || !privateKey || !clientEmail) {
         console.error('❌ Firebase credentials are REQUIRED but not found in environment variables.');
         console.error('   Required variables:');

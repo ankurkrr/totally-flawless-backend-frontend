@@ -90,6 +90,30 @@ npm run aab
 
 If you can't get this to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
 
+## Java / Gradle (Android) notes
+
+If Android build fails with:
+
+- `Unsupported class file major version 67` (Java 23)
+- `Unsupported class file major version 68` (Java 24)
+
+Your Gradle is running on a newer Java (e.g. **Java 23/24**). React Native `0.73.x` with Android Gradle Plugin `8.x` expects **Java 17**.
+
+Quick fix (recommended): use the repo script that switches to Java 17 for this run and then launches Android:
+
+```bash
+npm run android:java17
+```
+
+On macOS, switch your shell to Java 17 before running Android:
+
+```bash
+export JAVA_HOME="$(/usr/libexec/java_home -v 17)"
+export PATH="$JAVA_HOME/bin:$PATH"
+cd android && ./gradlew clean && cd ..
+npm run android
+```
+
 # Learn More
 
 To learn more about React Native, take a look at the following resources:
