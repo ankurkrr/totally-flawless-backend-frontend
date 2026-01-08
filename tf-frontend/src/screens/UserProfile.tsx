@@ -122,6 +122,7 @@ const UserProfile = (props: Props) => {
                 temp.imgUrl = data?.profileImage || ""
                 setCopyMobileNo(data?.phone || "")
                 setImageUri(data?.profileImage || "")
+                console.log('Profile image URL:', data?.profileImage)
                 setFormData({ ...formData, ...temp })
             }
             console.log('response?.data', response?.data)
@@ -603,7 +604,9 @@ const UserProfile = (props: Props) => {
                                     height: height * 0.14,
                                     width: height * 0.14,
                                     borderRadius: height * 0.7,
+                                    backgroundColor: '#E8E8E8',
                                 }}
+                                onError={(e) => console.log('Image load error:', e.nativeEvent.error)}
                             />
                         ) : (
                             <CommonPhotoClick />
