@@ -58,7 +58,7 @@ const UserProfile = (props: Props) => {
     const [geocode, setGeoCode] = useState('');
     const [search, setSearch] = useState(false);
     const [predictions, setPredictions] = useState([]);
-    const [imageUri, setImageUri] = useState(null);
+    const [imageUri, setImageUri] = useState<string | null>(null);
     const [visible, setVisible] = useState(false);
     const [placeId, setPlaceId] = useState('');
     const [isLoading, setIsLoading] = useState(false);
@@ -107,13 +107,13 @@ const UserProfile = (props: Props) => {
                 return
             }
             const id = await AsyncStorage.getItem('id');
-            setUserId(id)
+            setUserId(id ?? "")
             const response = await axiosInstance.get(`/get-userdetails?userId=${id}`);
-            if (response?.status==200) {
+            if (response?.status == 200) {
                 const data = response?.data?.data[0];
                 // console.log('data >>>>', data)
                 const temp = formData;
-                temp.id = id;
+                temp.id = id ?? "";
                 temp.firstName = data?.firstName || "";
                 temp.lastName = data?.lastName || "";
                 temp.email = data?.email || "";
@@ -132,7 +132,7 @@ const UserProfile = (props: Props) => {
     }
 
 
-    const handleChange = (name, value, click = false) => {
+    const handleChange = (name: string, value: string | boolean, click = false) => {
         console.log(name, value);
         setFormData({
             ...formData,
@@ -190,7 +190,7 @@ const UserProfile = (props: Props) => {
             //     valid = false;
             // }
 
-       
+
 
             // Image Upload validation
             // if (formData.imgUrl.trim() === '') {
@@ -253,22 +253,22 @@ const UserProfile = (props: Props) => {
             const response = await axiosInstance.get(
                 `/get-userdetails?userId=${id}`,
             );
-            const data=response.data.data[0];
+            const data = response.data.data[0];
             console.log("getUserDetails >>>", response.data.data[0])
-            if(data){
+            if (data) {
                 updateUser({
-                    id:data.id,
+                    id: data.id,
                     firstName: formData.firstName,
                     lastName: formData.lastName,
-                    createdDate:data.createdDate,
-                    phone:data?.phone,
+                    createdDate: data.createdDate,
+                    phone: data?.phone,
                     email: formData.email,
                     profileImage: formData.imgUrl,
                     isAvailable: data.isAvailable == 1 ? true : false,
                     userType: 'Client',
                 });
             }
-           
+
             // updateUser(response.data.data[0]);
         } catch (error) {
 
@@ -320,10 +320,10 @@ const UserProfile = (props: Props) => {
 
     const setAddress = async () => {
         try {
-                    // Proxy the Google Places request through the backend to protect API keys
-                    const getAddressDetails = await axiosInstance.get(
-                        `/maps/place?placeId=${placeId}`,
-                    );
+            // Proxy the Google Places request through the backend to protect API keys
+            const getAddressDetails = await axiosInstance.get(
+                `/maps/place?placeId=${placeId}`,
+            );
             // console.log('getAddressDetails', JSON.stringify(getAddressDetails.data));
             const latlong =
                 getAddressDetails.data.result?.geometry?.location?.lat +
@@ -413,7 +413,7 @@ const UserProfile = (props: Props) => {
         const id = await AsyncStorage.getItem('id');
         setFormData({
             ...formData,
-            id: id,
+            id: id ?? "",
         });
     };
 
@@ -455,7 +455,12 @@ const UserProfile = (props: Props) => {
 
     const openFileStorage = async () => {
         try {
-            const options = {
+            const options: {
+                mediaType: 'photo' | 'video' | 'mixed';
+                includeBase64: boolean;
+                maxHeight: number;
+                maxWidth: number;
+            } = {
                 mediaType: 'photo',
                 includeBase64: false,
                 maxHeight: 2000,
@@ -465,16 +470,17 @@ const UserProfile = (props: Props) => {
                 setVisible(false);
                 if (response.didCancel) {
                     console.log('User cancelled image picker');
-                } else if (response.error) {
-                    console.log('Image picker error: ', response.error);
+                } else if (response.errorCode) {
+                    console.log('Image picker error: ', response.errorMessage);
                 } else {
                     setIsLoading(true);
                     console.log('Response = ', response);
-                    let imageUri = response.uri || response.assets?.[0]?.uri;
+                    let imageUri = response.assets?.[0]?.uri ?? null;
                     setImageUri(imageUri);
-                    const imgUrl = await uploadToS3(response.assets[0]);
-
-                    setFormData({ ...formData, imgUrl: imgUrl });
+                    if (response.assets && response.assets[0]) {
+                        const imgUrl = await uploadToS3(response.assets[0]);
+                        setFormData({ ...formData, imgUrl: imgUrl });
+                    }
                     setTimeout(() => {
                         setIsLoading(false);
                     }, 1000);
@@ -819,7 +825,7 @@ const UserProfile = (props: Props) => {
                         
                             */}
                     </View>
-                    
+
 
                     {/* Continue Button */}
                     <TouchableOpacity
@@ -830,7 +836,7 @@ const UserProfile = (props: Props) => {
                     {!visible && <Toast />}
                 </View>
                 {/* </KeyboardAvoidingView> */}
-                
+
                 <Overlay isVisible={visible} onBackdropPress={toggleOverlay}>
                     <View style={{ width: width / 1.5, padding: 10 }}>
                         <View style={{ marginVertical: 5 }}>
