@@ -371,12 +371,23 @@ const Register = ({ navigation }) => {
         } else {
           console.log('Response = ', response);
           setImageUri(response.assets[0].uri);
-          const name = formData?.id ? `profile_${formData.id}` : ""
-          const imgUrl = await uploadToS3(response.assets[0], name);
-          setIsLoading(false);
-          setFormData({ ...formData, imgUrl: imgUrl });
-          setErrors({ ...errors, imgUrl: "" });
-          // Handle the response (e.g., display the image or upload it)
+          setIsLoading(true);
+          try {
+            const name = formData?.id ? `profile_${formData.id}` : "";
+            const imgUrl = await uploadToS3(response.assets[0], name);
+            console.log('Upload successful, URL:', imgUrl);
+            setFormData({ ...formData, imgUrl: imgUrl });
+            setErrors({ ...errors, imgUrl: "" });
+          } catch (uploadError) {
+            console.error('Upload failed:', uploadError);
+            Toast.show({
+              type: 'error',
+              text1: 'Upload Failed',
+              text2: 'Could not upload image. Please try again.',
+            });
+          } finally {
+            setIsLoading(false);
+          }
         }
       });
     }
@@ -400,11 +411,23 @@ const Register = ({ navigation }) => {
           console.log('Response = ', response);
           let imageUri = response.uri || response.assets?.[0]?.uri;
           setImageUri(imageUri);
-          const name = formData?.id ? `profile_${formData.id}` : ""
-          const imgUrl = await uploadToS3(response.assets[0], name);
-          setIsLoading(false);
-          setFormData({ ...formData, imgUrl: imgUrl });
-          setErrors({ ...errors, imgUrl: "" });
+          setIsLoading(true);
+          try {
+            const name = formData?.id ? `profile_${formData.id}` : "";
+            const imgUrl = await uploadToS3(response.assets[0], name);
+            console.log('Upload successful, URL:', imgUrl);
+            setFormData({ ...formData, imgUrl: imgUrl });
+            setErrors({ ...errors, imgUrl: "" });
+          } catch (uploadError) {
+            console.error('Upload failed:', uploadError);
+            Toast.show({
+              type: 'error',
+              text1: 'Upload Failed',
+              text2: 'Could not upload image. Please try again.',
+            });
+          } finally {
+            setIsLoading(false);
+          }
         }
       });
     } catch (error) {
@@ -481,59 +504,59 @@ const Register = ({ navigation }) => {
         showsVerticalScrollIndicator={true}
         onScrollBeginDrag={dismissKeyboard}
       >
-      {isLoading && (
-        <Modal animationType="fade" transparent={true}>
-          <View
-            style={{
-              flex: 1,
-              alignItems: 'center',
-              justifyContent: 'center',
-              backgroundColor: 'rgba(0,0,0,0.5)',
-            }}>
-            <ActivityIndicator size={'large'} color={'#FFF'} />
-          </View>
-        </Modal>
-      )}
-      {/* <KeyboardAvoidingView
+        {isLoading && (
+          <Modal animationType="fade" transparent={true}>
+            <View
+              style={{
+                flex: 1,
+                alignItems: 'center',
+                justifyContent: 'center',
+                backgroundColor: 'rgba(0,0,0,0.5)',
+              }}>
+              <ActivityIndicator size={'large'} color={'#FFF'} />
+            </View>
+          </Modal>
+        )}
+        {/* <KeyboardAvoidingView
         behavior="height"
         style={{flex:1}} 
         keyboardVerticalOffset={keyboardVerticalOffset}> */}
-      <View style={styles.container}>
+        <View style={styles.container}>
 
 
-        {/* Logo Image */}
-        <Image
-          source={require('../../src/assets/logo2.png')}
-          style={styles.logo}
-        />
+          {/* Logo Image */}
+          <Image
+            source={require('../../src/assets/logo2.png')}
+            style={styles.logo}
+          />
 
-        {/* Header */}
-        <Text style={styles.header}>
-          Please upload a current picture of yourself
-        </Text>
+          {/* Header */}
+          <Text style={styles.header}>
+            Please upload a current picture of yourself
+          </Text>
 
-        {/* Image Upload */}
-        <TouchableOpacity
-          onPress={() => toggleOverlay()}
-          style={{
-            height: height * 0.14,
-            width: height * 0.14,
-            borderRadius: height * 0.7,
-          }}>
-          {imageUri ? (
-            <Image
-              source={{ uri: imageUri }}
-              style={{
-                height: height * 0.14,
-                width: height * 0.14,
-                borderRadius: height * 0.7,
-              }}
-            />
-          ) : (
-            <CommonPhotoClick />
+          {/* Image Upload */}
+          <TouchableOpacity
+            onPress={() => toggleOverlay()}
+            style={{
+              height: height * 0.14,
+              width: height * 0.14,
+              borderRadius: height * 0.7,
+            }}>
+            {imageUri ? (
+              <Image
+                source={{ uri: imageUri }}
+                style={{
+                  height: height * 0.14,
+                  width: height * 0.14,
+                  borderRadius: height * 0.7,
+                }}
+              />
+            ) : (
+              <CommonPhotoClick />
 
-          )}
-          {/* <Image
+            )}
+            {/* <Image
                 source={require('../../src/assets/photo.png')}
                 style={{
                   height: height * 0.14,
@@ -541,230 +564,230 @@ const Register = ({ navigation }) => {
                   borderRadius: height * 0.7,
                 }}
               /> */}
-        </TouchableOpacity>
-        <View>
-          {errors?.imgUrl && (
-            <Text style={styles.errorText}>{errors.imgUrl}</Text>
-          )}
-        </View>
+          </TouchableOpacity>
+          <View>
+            {errors?.imgUrl && (
+              <Text style={styles.errorText}>{errors.imgUrl}</Text>
+            )}
+          </View>
 
-        {/* Register Header */}
-        <Text style={{ ...styles.registerHeader, marginTop: 10 }}>Register</Text>
+          {/* Register Header */}
+          <Text style={{ ...styles.registerHeader, marginTop: 10 }}>Register</Text>
 
-        {/* Form */}
-        <View style={styles.form}>
-          <View
-            style={[
-              styles.inputContainer,
-              { backgroundColor: '#E8E8E8', zIndex: 99 },
-            ]}>
-            <Image
-              source={require('../assets/username.png')}
-              style={{
-                marginRight: 10,
-                height: 25,
-                width: 25,
-                objectFit: 'contain',
-              }}
-            />
-            <TextInput
-              style={styles.input}
-              placeholder="First Name"
-              placeholderTextColor="#888"
-              value={formData.firstName}
-              onChangeText={text => handleChange('firstName', text)}
-              onFocus={() => setSearch(false)}
-              testID="registerFirstName"
-              nativeID="registerFirstName"
-              accessibilityLabel="registerFirstName"
-            />
-          </View>
-          <View>
-            {errors?.firstName && (
-              <Text style={styles.errorText}>{errors.firstName}</Text>
+          {/* Form */}
+          <View style={styles.form}>
+            <View
+              style={[
+                styles.inputContainer,
+                { backgroundColor: '#E8E8E8', zIndex: 99 },
+              ]}>
+              <Image
+                source={require('../assets/username.png')}
+                style={{
+                  marginRight: 10,
+                  height: 25,
+                  width: 25,
+                  objectFit: 'contain',
+                }}
+              />
+              <TextInput
+                style={styles.input}
+                placeholder="First Name"
+                placeholderTextColor="#888"
+                value={formData.firstName}
+                onChangeText={text => handleChange('firstName', text)}
+                onFocus={() => setSearch(false)}
+                testID="registerFirstName"
+                nativeID="registerFirstName"
+                accessibilityLabel="registerFirstName"
+              />
+            </View>
+            <View>
+              {errors?.firstName && (
+                <Text style={styles.errorText}>{errors.firstName}</Text>
+              )}
+            </View>
+            <View style={[styles.inputContainer, { backgroundColor: '#E8E8E8' }]}>
+              <Image
+                source={require('../assets/username.png')}
+                style={{
+                  marginRight: 10,
+                  height: 25,
+                  width: 25,
+                  objectFit: 'contain',
+                }}
+              />
+              <TextInput
+                style={styles.input}
+                placeholder="Last Name"
+                placeholderTextColor="#888"
+                value={formData.lastName}
+                onChangeText={text => handleChange('lastName', text)}
+                onFocus={() => setSearch(false)}
+                testID="registerLastName"
+                nativeID="registerLastName"
+                accessibilityLabel="registerLastName"
+              />
+            </View>
+            <View>
+              {errors?.lastName && (
+                <Text style={styles.errorText}>{errors.lastName}</Text>
+              )}
+            </View>
+            <View style={[styles.inputContainer, { backgroundColor: '#E8E8E8' }]}>
+              <Image
+                source={require('../assets/mail.png')}
+                style={{
+                  marginRight: 10,
+                  height: 25,
+                  width: 25,
+                  objectFit: 'contain',
+                }}
+              />
+              <TextInput
+                style={styles.input}
+                placeholder="Email"
+                placeholderTextColor="#888"
+                keyboardType="email-address"
+                autoCorrect={false}
+                autoCapitalize="none"
+                value={formData.email}
+                onChangeText={text => handleChange('email', text)}
+                onFocus={() => setSearch(false)}
+                testID="registerEmail"
+                nativeID="registerEmail"
+                accessibilityLabel="registerEmail"
+              />
+            </View>
+            <View>
+              {errors?.email && (
+                <Text style={styles.errorText}>{errors.email}</Text>
+              )}
+            </View>
+            <View
+              style={[
+                styles.inputContainer, { marginBottom: 0 }, { backgroundColor: '#E8E8E8' },
+              ]}>
+              <Image
+                source={require('../assets/Group.png')}
+                style={{
+                  marginRight: 10,
+                  height: 25,
+                  width: 25,
+                  objectFit: 'contain',
+                }}
+              />
+              <TextInput
+                style={styles.input}
+                placeholder="Address"
+                placeholderTextColor="#888"
+                value={formData.address}
+                autoCorrect={false}
+                onChangeText={text => {
+                  handleChange('address', text);
+                  handleChangeText(text);
+                }}
+                onFocus={() => setSearch(true)}
+                testID="registerAddress"
+                nativeID="registerAddress"
+                accessibilityLabel="registerAddress"
+              />
+            </View>
+            <View>
+              {errors?.address && (
+                <Text style={styles.errorText}>{errors.address}</Text>
+              )}
+            </View>
+            {search && predictions && predictions.length > 0 && (
+              <ScrollView
+                keyboardShouldPersistTaps="always"
+                automaticallyAdjustKeyboardInsets={true}
+                nestedScrollEnabled={true}
+                style={{
+                  maxHeight: height / 8,
+                  overflowY: 'scroll',
+                  borderWidth: 1,
+                  borderColor: 'gray',
+                  zIndex: 99,
+                }}>
+                {predictions.map(item => (
+                  <TouchableOpacity
+                    key={item.place_id}
+                    onPress={() => {
+                      setPlaceId(item.place_id);
+                      handleChange('address', item.description, true);
+                    }}
+                    style={{
+                      flex: 1,
+                      paddingHorizontal: 5,
+                      paddingVertical: 10,
+                      borderBottomWidth: 1,
+                      borderColor: 'gray',
+                    }}>
+                    <View>
+                      <Text style={{ color: '#000', fontSize: 12 }}>
+                        {item.description}
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                ))}
+              </ScrollView>
             )}
           </View>
-          <View style={[styles.inputContainer, { backgroundColor: '#E8E8E8' }]}>
-            <Image
-              source={require('../assets/username.png')}
-              style={{
-                marginRight: 10,
-                height: 25,
-                width: 25,
-                objectFit: 'contain',
-              }}
-            />
-            <TextInput
-              style={styles.input}
-              placeholder="Last Name"
-              placeholderTextColor="#888"
-              value={formData.lastName}
-              onChangeText={text => handleChange('lastName', text)}
-              onFocus={() => setSearch(false)}
-              testID="registerLastName"
-              nativeID="registerLastName"
-              accessibilityLabel="registerLastName"
-            />
-          </View>
-          <View>
-            {errors?.lastName && (
-              <Text style={styles.errorText}>{errors.lastName}</Text>
-            )}
-          </View>
-          <View style={[styles.inputContainer, { backgroundColor: '#E8E8E8' }]}>
-            <Image
-              source={require('../assets/mail.png')}
-              style={{
-                marginRight: 10,
-                height: 25,
-                width: 25,
-                objectFit: 'contain',
-              }}
-            />
-            <TextInput
-              style={styles.input}
-              placeholder="Email"
-              placeholderTextColor="#888"
-              keyboardType="email-address"
-              autoCorrect={false}
-              autoCapitalize="none"
-              value={formData.email}
-              onChangeText={text => handleChange('email', text)}
-              onFocus={() => setSearch(false)}
-              testID="registerEmail"
-              nativeID="registerEmail"
-              accessibilityLabel="registerEmail"
-            />
-          </View>
-          <View>
-            {errors?.email && (
-              <Text style={styles.errorText}>{errors.email}</Text>
-            )}
-          </View>
-          <View
-            style={[
-              styles.inputContainer, { marginBottom: 0 }, { backgroundColor: '#E8E8E8' },
-            ]}>
-            <Image
-              source={require('../assets/Group.png')}
-              style={{
-                marginRight: 10,
-                height: 25,
-                width: 25,
-                objectFit: 'contain',
-              }}
-            />
-            <TextInput
-              style={styles.input}
-              placeholder="Address"
-              placeholderTextColor="#888"
-              value={formData.address}
-              autoCorrect={false}
-              onChangeText={text => {
-                handleChange('address', text);
-                handleChangeText(text);
-              }}
-              onFocus={() => setSearch(true)}
-              testID="registerAddress"
-              nativeID="registerAddress"
-              accessibilityLabel="registerAddress"
-            />
-          </View>
-          <View>
-            {errors?.address && (
-              <Text style={styles.errorText}>{errors.address}</Text>
-            )}
-          </View>
-          {search && predictions && predictions.length > 0 && (
-            <ScrollView
-              keyboardShouldPersistTaps="always"
-              automaticallyAdjustKeyboardInsets={true}
-              nestedScrollEnabled={true}
-              style={{
-                maxHeight: height / 8,
-                overflowY: 'scroll',
-                borderWidth: 1,
-                borderColor: 'gray',
-                zIndex: 99,
-              }}>
-              {predictions.map(item => (
-                <TouchableOpacity
-                  key={item.place_id}
-                  onPress={() => {
-                    setPlaceId(item.place_id);
-                    handleChange('address', item.description, true);
-                  }}
-                  style={{
-                    flex: 1,
-                    paddingHorizontal: 5,
-                    paddingVertical: 10,
-                    borderBottomWidth: 1,
-                    borderColor: 'gray',
-                  }}>
-                  <View>
-                    <Text style={{ color: '#000', fontSize: 12 }}>
-                      {item.description}
+
+          {/* Terms and Conditions */}
+          <View style={[styles.termsContainer, { justifyContent: 'flex-start' }]}
+          //onPress={() => handleChange('agreeTerms', !formData.agreeTerms)}
+          >
+            <CheckBox
+              checked={formData.agreeTerms}
+              onPress={() => handleChange('agreeTerms', !formData.agreeTerms)}
+              title={
+                <View style={{ paddingRight: 3 }}>
+                  <Text style={styles.text}>
+                    By continuing to use this site you agree with our{' '}
+                    <Text
+                      style={styles.linkText}
+                      onPress={() =>
+                        handleLinkPress(TERMS_URL)
+                      }>
+                      Terms of use
+                    </Text>{' '}
+                    and{' '}
+                    <Text
+                      style={styles.linkText}
+                      onPress={() =>
+                        handleLinkPress(PRIVACY_URL)
+                      }>
+                      Privacy policy.
                     </Text>
-                  </View>
-                </TouchableOpacity>
-              ))}
-            </ScrollView>
-          )}
-        </View>
-
-        {/* Terms and Conditions */}
-        <View style={[styles.termsContainer, { justifyContent: 'flex-start' }]}
-        //onPress={() => handleChange('agreeTerms', !formData.agreeTerms)}
-        >
-          <CheckBox
-            checked={formData.agreeTerms}
-            onPress={() => handleChange('agreeTerms', !formData.agreeTerms)}
-            title={
-              <View style={{ paddingRight: 3 }}>
-                <Text style={styles.text}>
-                  By continuing to use this site you agree with our{' '}
-                  <Text
-                    style={styles.linkText}
-                    onPress={() =>
-                      handleLinkPress(TERMS_URL)
-                    }>
-                    Terms of use
-                  </Text>{' '}
-                  and{' '}
-                  <Text
-                    style={styles.linkText}
-                    onPress={() =>
-                      handleLinkPress(PRIVACY_URL)
-                    }>
-                    Privacy policy.
                   </Text>
-                </Text>
-                <View>
-                  {errors?.agreeTerms && (
-                    <Text style={[styles.errorText, styles.errorTextfix]}>
-                      {errors.agreeTerms}
-                    </Text>
-                  )}
+                  <View>
+                    {errors?.agreeTerms && (
+                      <Text style={[styles.errorText, styles.errorTextfix]}>
+                        {errors.agreeTerms}
+                      </Text>
+                    )}
+                  </View>
                 </View>
-              </View>
-            }
-            checkedColor="black"
-            wrapperStyle={styles.wrapperStyle}
-            containerStyle={styles.containerStyle}
-          />
-        </View>
+              }
+              checkedColor="black"
+              wrapperStyle={styles.wrapperStyle}
+              containerStyle={styles.containerStyle}
+            />
+          </View>
 
-        {/* Continue Button */}
-        <TouchableOpacity
-          style={styles.continueButton}
-          onPress={handleRegister}
-          testID="registerContinue"
-          nativeID="registerContinue"
-          accessibilityLabel="registerContinue">
-          <Text style={styles.continueButtonText}>Continue</Text>
-        </TouchableOpacity>
-        {!visible && <Toast />}
-      </View>
+          {/* Continue Button */}
+          <TouchableOpacity
+            style={styles.continueButton}
+            onPress={handleRegister}
+            testID="registerContinue"
+            nativeID="registerContinue"
+            accessibilityLabel="registerContinue">
+            <Text style={styles.continueButtonText}>Continue</Text>
+          </TouchableOpacity>
+          {!visible && <Toast />}
+        </View>
       </KeyboardAwareScrollView>
 
       <Overlay isVisible={visible} onBackdropPress={toggleOverlay}>
