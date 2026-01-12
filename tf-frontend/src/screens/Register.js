@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   View,
   Text,
@@ -41,6 +41,12 @@ import CommonPhotoClick from '../components/CommonPhotoClick';
 
 const Register = ({ navigation }) => {
   const keyboardVerticalOffset = Platform.OS === 'ios' ? 40 : 0;
+
+  // Refs for TextInput focus management
+  const firstNameRef = useRef(null);
+  const lastNameRef = useRef(null);
+  const emailRef = useRef(null);
+  const addressRef = useRef(null);
 
   const options = {
     keyPrefix: 'uploads/',
@@ -591,12 +597,16 @@ const Register = ({ navigation }) => {
                 }}
               />
               <TextInput
+                ref={firstNameRef}
                 style={styles.input}
                 placeholder="First Name"
                 placeholderTextColor="#888"
                 value={formData.firstName}
                 onChangeText={text => handleChange('firstName', text)}
                 onFocus={() => setSearch(false)}
+                returnKeyType="next"
+                onSubmitEditing={() => lastNameRef.current?.focus()}
+                blurOnSubmit={false}
                 testID="registerFirstName"
                 nativeID="registerFirstName"
                 accessibilityLabel="registerFirstName"
@@ -618,12 +628,16 @@ const Register = ({ navigation }) => {
                 }}
               />
               <TextInput
+                ref={lastNameRef}
                 style={styles.input}
                 placeholder="Last Name"
                 placeholderTextColor="#888"
                 value={formData.lastName}
                 onChangeText={text => handleChange('lastName', text)}
                 onFocus={() => setSearch(false)}
+                returnKeyType="next"
+                onSubmitEditing={() => emailRef.current?.focus()}
+                blurOnSubmit={false}
                 testID="registerLastName"
                 nativeID="registerLastName"
                 accessibilityLabel="registerLastName"
@@ -645,6 +659,7 @@ const Register = ({ navigation }) => {
                 }}
               />
               <TextInput
+                ref={emailRef}
                 style={styles.input}
                 placeholder="Email"
                 placeholderTextColor="#888"
@@ -654,6 +669,9 @@ const Register = ({ navigation }) => {
                 value={formData.email}
                 onChangeText={text => handleChange('email', text)}
                 onFocus={() => setSearch(false)}
+                returnKeyType="next"
+                onSubmitEditing={() => addressRef.current?.focus()}
+                blurOnSubmit={false}
                 testID="registerEmail"
                 nativeID="registerEmail"
                 accessibilityLabel="registerEmail"
@@ -678,6 +696,7 @@ const Register = ({ navigation }) => {
                 }}
               />
               <TextInput
+                ref={addressRef}
                 style={styles.input}
                 placeholder="Address"
                 placeholderTextColor="#888"
@@ -688,6 +707,8 @@ const Register = ({ navigation }) => {
                   handleChangeText(text);
                 }}
                 onFocus={() => setSearch(true)}
+                returnKeyType="done"
+                onSubmitEditing={() => Keyboard.dismiss()}
                 testID="registerAddress"
                 nativeID="registerAddress"
                 accessibilityLabel="registerAddress"
