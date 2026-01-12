@@ -31,7 +31,7 @@ import { LogBox } from 'react-native';
 import { Icon } from '@rneui/base';
 import RNFetchBlob from 'rn-fetch-blob';
 import { API_URL } from '../store/url';
-import { uploadToS3 } from '../services/S3UploadService';
+import { uploadToS3, deleteFromStorage } from '../services/S3UploadService';
 import TopBar from '../components/TopBar';
 import { ms, mvs } from 'react-native-size-matters';
 import { GlobalStyles } from '../style/GlobalStyles';
@@ -119,9 +119,11 @@ const UserProfile = (props: Props) => {
                 temp.email = data?.email || "";
                 temp.phone = data?.phone || "";
                 temp.address = data?.address || "";
-                temp.imgUrl = data?.profileImage || ""
+                // Treat 'DELETED' marker as no image
+                const profileImg = data?.profileImage === 'DELETED' ? '' : (data?.profileImage || '');
+                temp.imgUrl = profileImg;
                 setCopyMobileNo(data?.phone || "")
-                setImageUri(data?.profileImage || "")
+                setImageUri(profileImg)
                 console.log('Profile image URL:', data?.profileImage)
                 setFormData({ ...formData, ...temp })
             }
@@ -509,6 +511,79 @@ const UserProfile = (props: Props) => {
         setVisible(!visible);
     };
 
+    const deleteImage = async () => {
+        // #region agent log
+        fetch('http://127.0.0.1:7243/ingest/f8c9b63d-614d-4ebb-81a0-9d686c172b89', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ location: 'UserProfile.tsx:deleteImage:entry', message: 'deleteImage called', data: { currentImgUrl: formData.imgUrl, oderId: formData.id }, timestamp: Date.now(), sessionId: 'debug-session', hypothesisId: 'DELETE' }) }).catch(() => { });
+        // #endregion
+
+        setVisible(false);
+
+        if (!formData.imgUrl) {
+            showToast('No image to delete');
+            return;
+        }
+
+        if (!formData.id) {
+            showToast('User ID not found');
+            return;
+        }
+
+        try {
+            setIsLoading(true);
+            const oldImageUrl = formData.imgUrl;
+            const currentUserId = formData.id;
+
+            // #region agent log
+            fetch('http://127.0.0.1:7243/ingest/f8c9b63d-614d-4ebb-81a0-9d686c172b89', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ location: 'UserProfile.tsx:deleteImage:beforeDeleteStorage', message: 'About to delete from storage AND clear DB', data: { oldImageUrl, userId: currentUserId }, timestamp: Date.now(), sessionId: 'debug-session', hypothesisId: 'DELETE' }) }).catch(() => { });
+            // #endregion
+
+            // Delete from GCS storage AND clear profileImage in database (single call)
+            const deleted = await deleteFromStorage(oldImageUrl, currentUserId);
+
+            // #region agent log
+            fetch('http://127.0.0.1:7243/ingest/f8c9b63d-614d-4ebb-81a0-9d686c172b89', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ location: 'UserProfile.tsx:deleteImage:afterDeleteStorage', message: 'deleteFromStorage returned', data: { deleted }, timestamp: Date.now(), sessionId: 'debug-session', hypothesisId: 'DELETE' }) }).catch(() => { });
+            // #endregion
+
+            if (deleted) {
+                // Also update production database via update-user endpoint
+                // #region agent log
+                fetch('http://127.0.0.1:7243/ingest/f8c9b63d-614d-4ebb-81a0-9d686c172b89', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ location: 'UserProfile.tsx:deleteImage:callingUpdateUser', message: 'Calling update-user to clear imgUrl in production DB', data: {}, timestamp: Date.now(), sessionId: 'debug-session', hypothesisId: 'DELETE' }) }).catch(() => { });
+                // #endregion
+
+                // Clear imgUrl in production database
+                // Use a special "deleted" marker since production ignores empty strings
+                await axiosInstance.post(`/update-user`, {
+                    id: currentUserId,
+                    firstName: formData.firstName,
+                    lastName: formData.lastName,
+                    email: formData.email,
+                    phone: formData.phone,
+                    address: formData.address,
+                    imgUrl: 'DELETED', // Marker to indicate deleted (production needs fix to handle empty)
+                });
+
+                // Update local state
+                setImageUri(null);
+                setFormData({ ...formData, imgUrl: '' });
+                showToast('Image deleted successfully');
+
+                // #region agent log
+                fetch('http://127.0.0.1:7243/ingest/f8c9b63d-614d-4ebb-81a0-9d686c172b89', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ location: 'UserProfile.tsx:deleteImage:success', message: 'Image deleted successfully', data: {}, timestamp: Date.now(), sessionId: 'debug-session', hypothesisId: 'DELETE' }) }).catch(() => { });
+                // #endregion
+            } else {
+                showToast('Failed to delete image');
+            }
+        } catch (error: any) {
+            // #region agent log
+            fetch('http://127.0.0.1:7243/ingest/f8c9b63d-614d-4ebb-81a0-9d686c172b89', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ location: 'UserProfile.tsx:deleteImage:error', message: 'Error deleting image', data: { error: error?.message || String(error) }, timestamp: Date.now(), sessionId: 'debug-session', hypothesisId: 'DELETE' }) }).catch(() => { });
+            // #endregion
+            console.error('Error deleting image:', error);
+            showToast('Failed to delete image');
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     useEffect(() => {
         getLocalStorage();
     }, []);
@@ -527,7 +602,8 @@ const UserProfile = (props: Props) => {
             <KeyboardAwareScrollView
                 keyboardShouldPersistTaps="always"
                 // automaticallyAdjustKeyboardInsets={true}
-                style={{ backgroundColor: '#FFF', flex: 1 }}>
+                style={{ backgroundColor: '#FFF', flex: 1 }}
+                contentContainerStyle={{ paddingBottom: 100 }}>
                 {/* <View
               style={{
                 width: '100%',
@@ -590,7 +666,8 @@ const UserProfile = (props: Props) => {
                         onPress={() => {
                             // showToast("temporarily unavailable");
                             // toggleOverlay()
-                            if (formData?.imgUrl) {
+                            const hasValidImage = formData?.imgUrl && formData.imgUrl !== 'DELETED';
+                            if (hasValidImage) {
                                 setImageVisible(true)
                                 setImageData([{ uri: formData?.imgUrl }])
                             } else {
@@ -603,7 +680,7 @@ const UserProfile = (props: Props) => {
                             width: height * 0.14,
                             borderRadius: height * 0.7,
                         }}>
-                        {formData?.imgUrl ? (
+                        {formData?.imgUrl && formData.imgUrl !== 'DELETED' ? (
                             <Image
                                 source={{ uri: formData?.imgUrl }}
                                 style={{
@@ -866,6 +943,20 @@ const UserProfile = (props: Props) => {
                                 Open Gallery
                             </Text>
                         </TouchableOpacity>
+                        {formData?.imgUrl ? (
+                            <TouchableOpacity
+                                onPress={() => deleteImage()}
+                                style={{
+                                    padding: 10,
+                                    borderWidth: 0.5,
+                                    marginVertical: 5,
+                                    backgroundColor: '#D32F2F',
+                                }}>
+                                <Text style={{ textAlign: 'center', color: '#FFF' }}>
+                                    Delete Image
+                                </Text>
+                            </TouchableOpacity>
+                        ) : null}
                     </View>
                 </Overlay>
             </KeyboardAwareScrollView>
