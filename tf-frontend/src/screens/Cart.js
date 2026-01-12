@@ -2794,7 +2794,7 @@ const Cart = ({ navigation }) => {
                   paddingHorizontal: 15,
                   justifyContent: 'space-evenly',
                   marginTop: 10,
-                  marginBottom: 130,
+                  marginBottom: 180,
                 }}>
                 {/* <View
                   style={{
