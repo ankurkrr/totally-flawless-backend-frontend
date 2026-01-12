@@ -6,7 +6,9 @@ import {
   ScrollView,
   Dimensions,
   Platform,
+  StatusBar,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Icon, Image } from '@rneui/base';
 import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
@@ -386,35 +388,39 @@ const SummaryLater = ({ navigation }) => {
   };
 
   return (
-    <View>
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#FFF' }}>
+      <StatusBar barStyle="dark-content" backgroundColor="#FFF" />
+      
+      {/* Fixed Header */}
+      <View
+        style={{ flexDirection: 'row', paddingVertical: 10, paddingHorizontal: 15, backgroundColor: '#FFF' }}>
+        <View>
+          <Icon
+            color="#000"
+            name="arrow-back-ios"
+            onPress={() => navigation.goBack()}
+            size={25}
+            type="material"
+          />
+        </View>
+        <View style={{ justifyContent: 'center', paddingLeft: 10 }}>
+          <Text
+            style={{
+              color: 'black',
+              fontSize: 18,
+              fontWeight: 700,
+              fontFamily: 'Poppins-Regular',
+            }}>
+            Summary
+          </Text>
+        </View>
+      </View>
+
       <ScrollView
         style={{
           backgroundColor: 'white',
-          height: height,
+          flex: 1,
         }}>
-        <View
-          style={{ flexDirection: 'row', marginTop: 10, marginHorizontal: 15 }}>
-          <View>
-            <Icon
-              color="#000"
-              name="arrow-back-ios"
-              onPress={() => navigation.goBack()}
-              size={25}
-              type="material"
-            />
-          </View>
-          <View style={{ justifyContent: 'center', paddingLeft: 10 }}>
-            <Text
-              style={{
-                color: 'black',
-                fontSize: 18,
-                fontWeight: 700,
-                fontFamily: 'Poppins-Regular',
-              }}>
-              Summary
-            </Text>
-          </View>
-        </View>
         <View
           style={{ marginTop: 10, paddingHorizontal: 5, marginHorizontal: 15 }}>
           <Text
@@ -1043,7 +1049,7 @@ const SummaryLater = ({ navigation }) => {
           </View>
         </View>
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 };
 
