@@ -9,7 +9,9 @@ import {
   StyleSheet,
   Modal,
   Pressable,
+  StatusBar,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Icon, Image } from '@rneui/base';
 import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
@@ -255,7 +257,7 @@ const Summary = ({ navigation }) => {
       // console.log('serviceList.length', serviceList.length)
       const allCount = cartDetails?.data?.now.length + serviceList.length;
       if (allCount > 2) {
-        const sText=allCount - serviceList.length==1?`${allCount - serviceList.length} service`:`${allCount - serviceList.length} services`
+        const sText = allCount - serviceList.length == 1 ? `${allCount - serviceList.length} service` : `${allCount - serviceList.length} services`
         setModalText(
           `You can only add 2 services in immediate booking. Please delete ${sText} to continue with add to cart.`,
         );
@@ -264,7 +266,7 @@ const Summary = ({ navigation }) => {
       }
       console.log('in submit');
       let totalAmount = 0;
-      let bookingFee =bookingFees;
+      let bookingFee = bookingFees;
       let totalGratuity = 0;
       let totalAddOnAmt = 0;
       let totalLongHair = 0;
@@ -327,7 +329,7 @@ const Summary = ({ navigation }) => {
       const body = {
         actionType: 'U',
         userId: userId,
-        cartId:cartDetails.data.Id,
+        cartId: cartDetails.data.Id,
         totalAmount: (totalAmount + bookingFee).toString(),
         bookingFee: `${bookingFees}`,
         addressId: defaultAddress,
@@ -410,7 +412,7 @@ const Summary = ({ navigation }) => {
       later: later,
       bookingTime: cartDetails?.bookingTime || '',
     };
-    console.log("summary body >>>",body);
+    console.log("summary body >>>", body);
     await AsyncStorage.removeItem(asynchEnums.SEND_NOTI_ARTIST)
     try {
       const response = await axiosInstance.post(`/cart`, body);
@@ -427,7 +429,8 @@ const Summary = ({ navigation }) => {
   };
 
   return (
-    <View>
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#FFF' }}>
+      <StatusBar barStyle="dark-content" backgroundColor="#FFF" />
       <Modal
         animationType="fade"
         transparent={true}
@@ -474,34 +477,36 @@ const Summary = ({ navigation }) => {
         </View>
       </Modal>
 
+      {/* Fixed Header */}
+      <View
+        style={{ flexDirection: 'row', paddingVertical: 10, paddingHorizontal: 15, backgroundColor: '#FFF' }}>
+        <View>
+          <Icon
+            color="#000"
+            name="arrow-back-ios"
+            onPress={() => navigation.goBack()}
+            size={25}
+            type="material"
+          />
+        </View>
+        <View style={{ justifyContent: 'center', paddingLeft: 10 }}>
+          <Text
+            style={{
+              color: 'black',
+              fontSize: 18,
+              fontWeight: 700,
+              fontFamily: 'Poppins-Regular',
+            }}>
+            Summary
+          </Text>
+        </View>
+      </View>
+
       <ScrollView
         style={{
           backgroundColor: 'white',
-          height: height,
+          flex: 1,
         }}>
-        <View
-          style={{ flexDirection: 'row', marginTop: 10, marginHorizontal: 15 }}>
-          <View>
-            <Icon
-              color="#000"
-              name="arrow-back-ios"
-              onPress={() => navigation.goBack()}
-              size={25}
-              type="material"
-            />
-          </View>
-          <View style={{ justifyContent: 'center', paddingLeft: 10 }}>
-            <Text
-              style={{
-                color: 'black',
-                fontSize: 18,
-                fontWeight: 700,
-                fontFamily: 'Poppins-Regular',
-              }}>
-              Summary
-            </Text>
-          </View>
-        </View>
         <View
           style={{ marginTop: 10, paddingHorizontal: 5, marginHorizontal: 15 }}>
           <Text
@@ -909,7 +914,7 @@ const Summary = ({ navigation }) => {
                     fontSize: 14,
                     fontWeight: 500,
                   }}>
-                  Booking Fee (24 hours or less) 
+                  Booking Fee (24 hours or less)
                 </Text>
               </View>
               <View>
@@ -1097,7 +1102,7 @@ const Summary = ({ navigation }) => {
           </View>
         </View>
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 };
 

@@ -85,6 +85,88 @@ const Slider = ({ navigation }) => {
     };
   }, []);
 
+  // Auto-redirect authenticated users on mount
+  useEffect(() => {
+    const checkAuthAndRedirect = async () => {
+      try {
+        const id = await AsyncStorage.getItem('id');
+        const newUser = await AsyncStorage.getItem('isNewUser');
+        const userType = await AsyncStorage.getItem('userType');
+        const hasMobile = await AsyncStorage.getItem('hasMobile');
+        const isRegistered = await AsyncStorage.getItem('isRegistered');
+        const guest = await AsyncStorage.getItem('guestUser');
+
+        // If user is logged in and not a new user, redirect immediately
+        if (id && newUser === 'false') {
+          setLoading(true);
+          if (userType === 'Client') {
+            navigation.reset({
+              index: 0,
+              routes: [{ name: 'Home', params: { guestUser: false } }],
+            });
+          } else {
+            // Artist flow
+            if (isRegistered) {
+              const response = await axiosInstance.get(`/get-artistdetails?artistId=${id}`);
+              const data = response?.data?.data || "";
+              updateUser({
+                firstName: data.firstName,
+                lastName: data.lastName,
+                mobile: data?.mobile,
+                email: data.email,
+                userType: 'Artist',
+              });
+
+              if (data && data?.isApproved == 1) {
+                navigation.reset({
+                  index: 0,
+                  routes: [
+                    {
+                      name: screenNames.ARTIST_HOME,
+                      params: { hasMobile: hasMobile },
+                    },
+                  ],
+                });
+              } else {
+                navigation.reset({
+                  index: 0,
+                  routes: [
+                    {
+                      name: 'ApplicationReviewPage',
+                      params: { hasMobile: hasMobile },
+                    },
+                  ],
+                });
+              }
+            } else {
+              navigation.reset({
+                index: 0,
+                routes: [
+                  {
+                    name: 'ArtistLogin',
+                    params: { hasMobile: hasMobile },
+                  },
+                ],
+              });
+            }
+          }
+        } else if (guest === "true") {
+          // Guest user - redirect to Home
+          dispatch({ type: IS_GUEST, payload: true });
+          navigation.reset({
+            index: 0,
+            routes: [{ name: 'Home', params: { guestUser: true } }],
+          });
+        }
+        // If none of the above, user stays on Slider (not authenticated)
+      } catch (error) {
+        console.log('Auto-redirect check error:', error);
+      }
+    };
+
+    checkAuthAndRedirect();
+  }, []);
+
   const handleSkip = async () => {
     setLoading(true)
     const guest = await AsyncStorage.getItem('guestUser');
