@@ -17,13 +17,14 @@ import { API_URL } from '../store/url';
 import screenNames from '../constants/screenNames';
 import axiosInstance from '../services/axiosInterceptor';
 import { asynchEnums } from '../constants/enums';
+import { Icon } from '@rneui/base';
 
 
 const BottomBar = ({ navigation, page }) => {
   const dispatch = useDispatch();
   const insets = useSafeAreaInsets();
   const [currentPage, setCurrentPage] = useState('Home');
-  const { cartItems, isAddedCart,isGuest } = useSelector(state => state.AppReducer);
+  const { cartItems, isAddedCart, isGuest } = useSelector(state => state.AppReducer);
   // const APIBASEURL = 'http://164.52.197.9:3001';
   // const [guestUser, setGuestUser] = useState(false);
   useEffect(() => {
@@ -32,6 +33,7 @@ const BottomBar = ({ navigation, page }) => {
     page === screenNames.USER_BOOKING && setCurrentPage(screenNames.USER_BOOKING);
     // page === "Bookings" && setCurrentPage(screenNames.USER_BOOKING);
     page === screenNames.USER_PROFILE && setCurrentPage(screenNames.USER_PROFILE);
+    page === screenNames.MAP_SCREEN && setCurrentPage(screenNames.MAP_SCREEN);
   }, []);
 
   const getCartItems = async id => {
@@ -49,7 +51,7 @@ const BottomBar = ({ navigation, page }) => {
         } else if (data?.now.length > 0) {
           dispatch({ type: CART_ITEMS, payload: data?.now.length });
           console.log('ItemsLength', data?.now.length);
-        }else{
+        } else {
           dispatch({ type: CART_DATA, payload: [] });
           dispatch({ type: CART_ITEMS, payload: 0 });
         }
@@ -70,14 +72,14 @@ const BottomBar = ({ navigation, page }) => {
     console.log('ingetlocalstorae>>>>>>>>>>>', id);
     if (id) {
       getCartItems(id);
-    }else{
+    } else {
       dispatch({ type: CART_ITEMS, payload: 0 });
     }
   };
 
   useEffect(() => {
     if (isAddedCart) {
-      console.log("<<<<<<<<< isAddedCart >>>>>>>",isAddedCart)
+      console.log("<<<<<<<<< isAddedCart >>>>>>>", isAddedCart)
       getLocalStorage();
     }
   }, [isAddedCart]);
@@ -167,6 +169,26 @@ const BottomBar = ({ navigation, page }) => {
               fontSize: 12,
             }}>
             Booking
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => navigation(screenNames.MAP_SCREEN)}
+          style={styles.bottomIconDiv}>
+          <View style={{ height: 35, width: 35, justifyContent: 'center', alignItems: 'center' }}>
+            <Icon
+              name="location-on"
+              type="material"
+              size={32}
+              color="#444444"
+            />
+          </View>
+          <Text
+            style={{
+              color: 'black',
+              fontWeight: currentPage === screenNames.MAP_SCREEN ? 'bold' : 'normal',
+              fontSize: 12,
+            }}>
+            Map
           </Text>
         </TouchableOpacity>
         <TouchableOpacity

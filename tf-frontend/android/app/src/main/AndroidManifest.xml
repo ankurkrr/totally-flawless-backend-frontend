@@ -27,11 +27,10 @@ package="com.flawless"
       >
 
 
-         <!-- Google Maps API key removed from repository. Replace at build time with a secure key.
-              Recommended: set `resValue "string", "google_maps_api_key", System.getenv("GOOGLE_MAPS_API_KEY")` in Gradle or provide a local resource for builds. -->
+       <!-- Google Maps API key loaded from local.properties via manifestPlaceholders in build.gradle -->
        <meta-data
-     android:name="com.google.android.geo.API_KEY"
-     android:value="REPLACE_WITH_SECURE_KEY"/>
+         android:name="com.google.android.geo.API_KEY"
+         android:value="${GOOGLE_MAPS_API_KEY}"/>
       <activity
         android:name=".MainActivity"
         android:label="@string/app_name"
