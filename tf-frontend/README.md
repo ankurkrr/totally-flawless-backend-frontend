@@ -90,6 +90,10 @@ npm run aab
 
 If you can't get this to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
 
+## Running Emulator with Android Studio
+~/Library/Android/sdk/emulator/emulator -avd Pixel_9_Pro_API_Baklava
+~/Library/Android/sdk/emulator/emulator -avd EMULATOR_NAME
+
 ## Java / Gradle (Android) notes
 
 If Android build fails with:
