@@ -44,6 +44,7 @@ import TrackArtistInUserBooking from '../screens/TrackArtistInUserBooking';
 import MyGallery from '../screens/MyGallery';
 import { COLORS } from '../style/theme';
 import BookVirtualAppointment from '../screens/BookVirtualAppointment';
+import MapScreen from '../screens/MapScreen';
 const { width, height } = Dimensions.get('window');
 
 export const navigationRef = createNavigationContainerRef();
@@ -119,7 +120,7 @@ const Navigation = () => {
           header: () => {
             return null;
           },
-          
+
         }}
         name="Slider"
         component={Slider}
@@ -294,6 +295,15 @@ const Navigation = () => {
         }}
         name={screenNames.USER_WISHLIST}
         component={UserWishlist}
+      />
+      <AfterLoginStack.Screen
+        options={{
+          header: () => {
+            return null;
+          },
+        }}
+        name={screenNames.MAP_SCREEN}
+        component={MapScreen}
       />
 
       {/* Artist */}

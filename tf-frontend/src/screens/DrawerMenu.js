@@ -1,6 +1,7 @@
 import { Icon } from '@rneui/base';
 import { useEffect, useState, useContext } from 'react';
 import { Dimensions, Image, View, Text, TouchableOpacity, Linking, Platform, Alert } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import dayjs from 'dayjs';
 import UserContext from './UserContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -224,14 +225,19 @@ const DrawerMenu = ({ navigation }) => {
 
 
   return (
-    <>
-
+    <SafeAreaView
+      style={{
+        flex: 1,
+        backgroundColor: '#FFF',
+        borderTopRightRadius: 20,
+        borderBottomRightRadius: 20,
+      }}
+      edges={['top', 'bottom']}
+    >
       <Loader loading={loading} />
       <View
         style={{
-          height: height,
-          borderTopRightRadius: 20,
-          borderBottomRightRadius: 20,
+          flex: 1,
           backgroundColor: '#FFF',
         }}>
         {!isArtist && (
@@ -1110,7 +1116,7 @@ const DrawerMenu = ({ navigation }) => {
           </Text>
         </TouchableOpacity>
       </View>
-    </>
+    </SafeAreaView>
   );
 };
 

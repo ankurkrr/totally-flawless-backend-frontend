@@ -7,6 +7,7 @@ import {
   TextInput,
   TouchableOpacity,
   Dimensions,
+  InteractionManager,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
@@ -39,8 +40,18 @@ const VerifyOTP = ({ navigation }) => {
   const { updateUser } = useContext(UserContext);
 
   useEffect(() => {
-    inputRefs.current[0]?.focus(); // Focus on the first input field initially
     getLocalStorageItem();
+
+    // Wait for navigation animation to complete before focusing
+    // This ensures the keyboard stays open seamlessly from the previous screen
+    const focusTask = InteractionManager.runAfterInteractions(() => {
+      // Small additional delay to ensure the input is fully ready
+      setTimeout(() => {
+        inputRefs.current[0]?.focus();
+      }, 50);
+    });
+
+    return () => focusTask.cancel();
   }, []);
 
   const getLocalStorageItem = async () => {

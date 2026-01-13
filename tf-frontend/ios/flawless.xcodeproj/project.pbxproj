@@ -307,9 +307,13 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-flawless/Pods-flawless-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
+			inputPaths = (
+			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-flawless/Pods-flawless-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -368,9 +372,13 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-flawless-flawlessTests/Pods-flawless-flawlessTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
+			inputPaths = (
+			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-flawless-flawlessTests/Pods-flawless-flawlessTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -385,9 +393,13 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-flawless/Pods-flawless-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
+			inputPaths = (
+			);
 			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-flawless/Pods-flawless-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -402,9 +414,13 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-flawless-flawlessTests/Pods-flawless-flawlessTests-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
+			inputPaths = (
+			);
 			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-flawless-flawlessTests/Pods-flawless-flawlessTests-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -503,7 +519,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = UDH62XPXP8;
+				DEVELOPMENT_TEAM = UX2FSJHZJ2;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = flawless/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Totally Flawless";
@@ -541,7 +557,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = UDH62XPXP8;
+				DEVELOPMENT_TEAM = UX2FSJHZJ2;
 				INFOPLIST_FILE = flawless/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Totally Flawless";
 				LD_RUNPATH_SEARCH_PATHS = (

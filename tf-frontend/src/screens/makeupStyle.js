@@ -13,6 +13,8 @@ import {
   Pressable,
   Platform,
   Linking,
+  SafeAreaView,
+  StatusBar,
 } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import axios from 'axios';
@@ -533,7 +535,8 @@ const MakeStyle = ({ navigation }) => {
   }
 
   return (
-    <View style={{ flex: 1, backgroundColor: 'white' }}>
+    <SafeAreaView style={styles.safeArea}>
+      <StatusBar barStyle="dark-content" backgroundColor="white" />
       <Modal
         animationType="fade"
         transparent={true}
@@ -604,31 +607,28 @@ const MakeStyle = ({ navigation }) => {
         </View>
       </Modal>
 
-      <View
-        style={{ flexDirection: 'row', marginTop: 10, paddingHorizontal: 15 }}>
-        <View>
+      {/* Fixed Header */}
+      <View style={styles.header}>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
           <Icon
             color="#000"
             name="arrow-back-ios"
-            onPress={() => navigation.goBack()}
             size={25}
             type="material"
           />
-        </View>
-        <View style={{ justifyContent: 'center', paddingLeft: 10 }}>
-          <Text
-            style={{
-              color: 'black',
-              fontSize: 18,
-              fontWeight: 700,
-              fontFamily: 'Poppins-Regular',
-            }}>
-            Makeup Styles
-          </Text>
-        </View>
+        </TouchableOpacity>
+        <Text style={styles.headerTitle}>Makeup Styles</Text>
       </View>
 
-      <ScrollView style={{ height: height }}>
+      {/* Scrollable Content */}
+      <ScrollView 
+        style={{ flex: 1 }}
+        contentContainerStyle={{ flexGrow: 1, paddingBottom: 30 }}
+        showsVerticalScrollIndicator={true}
+        bounces={true}
+        keyboardShouldPersistTaps="handled"
+        nestedScrollEnabled={true}
+      >
         <View style={{ paddingHorizontal: 15 }}>
           <View style={{ marginTop: 10 }}>
             <Text
@@ -1316,7 +1316,7 @@ const MakeStyle = ({ navigation }) => {
           </Text>
         </View>
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -1324,6 +1324,28 @@ const MakeStyle = ({ navigation }) => {
 export default MakeStyle;
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: 'white',
+    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 15,
+    paddingVertical: 12,
+    backgroundColor: 'white',
+  },
+  backButton: {
+    padding: 4,
+  },
+  headerTitle: {
+    color: 'black',
+    fontSize: 18,
+    fontWeight: '700',
+    fontFamily: 'Poppins-Regular',
+    marginLeft: 10,
+  },
   checkBoxView: {
     height: 25,
     width: 25,

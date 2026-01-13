@@ -4,6 +4,13 @@ plugins {
     id "com.facebook.react"
 }
 
+// Load local.properties for API keys
+def localProperties = new Properties()
+def localPropertiesFile = rootProject.file('local.properties')
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.withInputStream { localProperties.load(it) }
+}
+
 react {
     entryFile.set(file("index.js"))
 }
@@ -34,6 +41,10 @@ android {
         versionCode 5
         versionName "1.05"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        
+        // Google Maps API Key from local.properties
+        def googleMapsApiKey = localProperties.getProperty('GOOGLE_MAPS_API_KEY') ?: 'MISSING_API_KEY'
+        manifestPlaceholders = [GOOGLE_MAPS_API_KEY: googleMapsApiKey]
     }
 
     signingConfigs {

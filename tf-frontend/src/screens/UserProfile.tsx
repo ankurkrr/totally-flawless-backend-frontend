@@ -31,7 +31,7 @@ import { LogBox } from 'react-native';
 import { Icon } from '@rneui/base';
 import RNFetchBlob from 'rn-fetch-blob';
 import { API_URL } from '../store/url';
-import { uploadToS3 } from '../services/S3UploadService';
+import { uploadToS3, deleteFromStorage } from '../services/S3UploadService';
 import TopBar from '../components/TopBar';
 import { ms, mvs } from 'react-native-size-matters';
 import { GlobalStyles } from '../style/GlobalStyles';
@@ -58,7 +58,7 @@ const UserProfile = (props: Props) => {
     const [geocode, setGeoCode] = useState('');
     const [search, setSearch] = useState(false);
     const [predictions, setPredictions] = useState([]);
-    const [imageUri, setImageUri] = useState(null);
+    const [imageUri, setImageUri] = useState<string | null>(null);
     const [visible, setVisible] = useState(false);
     const [placeId, setPlaceId] = useState('');
     const [isLoading, setIsLoading] = useState(false);
@@ -107,21 +107,24 @@ const UserProfile = (props: Props) => {
                 return
             }
             const id = await AsyncStorage.getItem('id');
-            setUserId(id)
+            setUserId(id ?? "")
             const response = await axiosInstance.get(`/get-userdetails?userId=${id}`);
-            if (response?.status==200) {
+            if (response?.status == 200) {
                 const data = response?.data?.data[0];
                 // console.log('data >>>>', data)
                 const temp = formData;
-                temp.id = id;
+                temp.id = id ?? "";
                 temp.firstName = data?.firstName || "";
                 temp.lastName = data?.lastName || "";
                 temp.email = data?.email || "";
                 temp.phone = data?.phone || "";
                 temp.address = data?.address || "";
-                temp.imgUrl = data?.profileImage || ""
+                // Treat 'DELETED' marker as no image
+                const profileImg = data?.profileImage === 'DELETED' ? '' : (data?.profileImage || '');
+                temp.imgUrl = profileImg;
                 setCopyMobileNo(data?.phone || "")
-                setImageUri(data?.profileImage || "")
+                setImageUri(profileImg)
+                console.log('Profile image URL:', data?.profileImage)
                 setFormData({ ...formData, ...temp })
             }
             console.log('response?.data', response?.data)
@@ -131,7 +134,7 @@ const UserProfile = (props: Props) => {
     }
 
 
-    const handleChange = (name, value, click = false) => {
+    const handleChange = (name: string, value: string | boolean, click = false) => {
         console.log(name, value);
         setFormData({
             ...formData,
@@ -189,7 +192,7 @@ const UserProfile = (props: Props) => {
             //     valid = false;
             // }
 
-       
+
 
             // Image Upload validation
             // if (formData.imgUrl.trim() === '') {
@@ -252,22 +255,22 @@ const UserProfile = (props: Props) => {
             const response = await axiosInstance.get(
                 `/get-userdetails?userId=${id}`,
             );
-            const data=response.data.data[0];
+            const data = response.data.data[0];
             console.log("getUserDetails >>>", response.data.data[0])
-            if(data){
+            if (data) {
                 updateUser({
-                    id:data.id,
+                    id: data.id,
                     firstName: formData.firstName,
                     lastName: formData.lastName,
-                    createdDate:data.createdDate,
-                    phone:data?.phone,
+                    createdDate: data.createdDate,
+                    phone: data?.phone,
                     email: formData.email,
                     profileImage: formData.imgUrl,
                     isAvailable: data.isAvailable == 1 ? true : false,
                     userType: 'Client',
                 });
             }
-           
+
             // updateUser(response.data.data[0]);
         } catch (error) {
 
@@ -319,10 +322,10 @@ const UserProfile = (props: Props) => {
 
     const setAddress = async () => {
         try {
-                    // Proxy the Google Places request through the backend to protect API keys
-                    const getAddressDetails = await axiosInstance.get(
-                        `/maps/place?placeId=${placeId}`,
-                    );
+            // Proxy the Google Places request through the backend to protect API keys
+            const getAddressDetails = await axiosInstance.get(
+                `/maps/place?placeId=${placeId}`,
+            );
             // console.log('getAddressDetails', JSON.stringify(getAddressDetails.data));
             const latlong =
                 getAddressDetails.data.result?.geometry?.location?.lat +
@@ -412,7 +415,7 @@ const UserProfile = (props: Props) => {
         const id = await AsyncStorage.getItem('id');
         setFormData({
             ...formData,
-            id: id,
+            id: id ?? "",
         });
     };
 
@@ -454,7 +457,12 @@ const UserProfile = (props: Props) => {
 
     const openFileStorage = async () => {
         try {
-            const options = {
+            const options: {
+                mediaType: 'photo' | 'video' | 'mixed';
+                includeBase64: boolean;
+                maxHeight: number;
+                maxWidth: number;
+            } = {
                 mediaType: 'photo',
                 includeBase64: false,
                 maxHeight: 2000,
@@ -464,16 +472,17 @@ const UserProfile = (props: Props) => {
                 setVisible(false);
                 if (response.didCancel) {
                     console.log('User cancelled image picker');
-                } else if (response.error) {
-                    console.log('Image picker error: ', response.error);
+                } else if (response.errorCode) {
+                    console.log('Image picker error: ', response.errorMessage);
                 } else {
                     setIsLoading(true);
                     console.log('Response = ', response);
-                    let imageUri = response.uri || response.assets?.[0]?.uri;
+                    let imageUri = response.assets?.[0]?.uri ?? null;
                     setImageUri(imageUri);
-                    const imgUrl = await uploadToS3(response.assets[0]);
-
-                    setFormData({ ...formData, imgUrl: imgUrl });
+                    if (response.assets && response.assets[0]) {
+                        const imgUrl = await uploadToS3(response.assets[0]);
+                        setFormData({ ...formData, imgUrl: imgUrl });
+                    }
                     setTimeout(() => {
                         setIsLoading(false);
                     }, 1000);
@@ -502,6 +511,79 @@ const UserProfile = (props: Props) => {
         setVisible(!visible);
     };
 
+    const deleteImage = async () => {
+        // #region agent log
+        fetch('http://127.0.0.1:7243/ingest/f8c9b63d-614d-4ebb-81a0-9d686c172b89', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ location: 'UserProfile.tsx:deleteImage:entry', message: 'deleteImage called', data: { currentImgUrl: formData.imgUrl, oderId: formData.id }, timestamp: Date.now(), sessionId: 'debug-session', hypothesisId: 'DELETE' }) }).catch(() => { });
+        // #endregion
+
+        setVisible(false);
+
+        if (!formData.imgUrl) {
+            showToast('No image to delete');
+            return;
+        }
+
+        if (!formData.id) {
+            showToast('User ID not found');
+            return;
+        }
+
+        try {
+            setIsLoading(true);
+            const oldImageUrl = formData.imgUrl;
+            const currentUserId = formData.id;
+
+            // #region agent log
+            fetch('http://127.0.0.1:7243/ingest/f8c9b63d-614d-4ebb-81a0-9d686c172b89', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ location: 'UserProfile.tsx:deleteImage:beforeDeleteStorage', message: 'About to delete from storage AND clear DB', data: { oldImageUrl, userId: currentUserId }, timestamp: Date.now(), sessionId: 'debug-session', hypothesisId: 'DELETE' }) }).catch(() => { });
+            // #endregion
+
+            // Delete from GCS storage AND clear profileImage in database (single call)
+            const deleted = await deleteFromStorage(oldImageUrl, currentUserId);
+
+            // #region agent log
+            fetch('http://127.0.0.1:7243/ingest/f8c9b63d-614d-4ebb-81a0-9d686c172b89', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ location: 'UserProfile.tsx:deleteImage:afterDeleteStorage', message: 'deleteFromStorage returned', data: { deleted }, timestamp: Date.now(), sessionId: 'debug-session', hypothesisId: 'DELETE' }) }).catch(() => { });
+            // #endregion
+
+            if (deleted) {
+                // Also update production database via update-user endpoint
+                // #region agent log
+                fetch('http://127.0.0.1:7243/ingest/f8c9b63d-614d-4ebb-81a0-9d686c172b89', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ location: 'UserProfile.tsx:deleteImage:callingUpdateUser', message: 'Calling update-user to clear imgUrl in production DB', data: {}, timestamp: Date.now(), sessionId: 'debug-session', hypothesisId: 'DELETE' }) }).catch(() => { });
+                // #endregion
+
+                // Clear imgUrl in production database
+                // Use a special "deleted" marker since production ignores empty strings
+                await axiosInstance.post(`/update-user`, {
+                    id: currentUserId,
+                    firstName: formData.firstName,
+                    lastName: formData.lastName,
+                    email: formData.email,
+                    phone: formData.phone,
+                    address: formData.address,
+                    imgUrl: 'DELETED', // Marker to indicate deleted (production needs fix to handle empty)
+                });
+
+                // Update local state
+                setImageUri(null);
+                setFormData({ ...formData, imgUrl: '' });
+                showToast('Image deleted successfully');
+
+                // #region agent log
+                fetch('http://127.0.0.1:7243/ingest/f8c9b63d-614d-4ebb-81a0-9d686c172b89', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ location: 'UserProfile.tsx:deleteImage:success', message: 'Image deleted successfully', data: {}, timestamp: Date.now(), sessionId: 'debug-session', hypothesisId: 'DELETE' }) }).catch(() => { });
+                // #endregion
+            } else {
+                showToast('Failed to delete image');
+            }
+        } catch (error: any) {
+            // #region agent log
+            fetch('http://127.0.0.1:7243/ingest/f8c9b63d-614d-4ebb-81a0-9d686c172b89', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ location: 'UserProfile.tsx:deleteImage:error', message: 'Error deleting image', data: { error: error?.message || String(error) }, timestamp: Date.now(), sessionId: 'debug-session', hypothesisId: 'DELETE' }) }).catch(() => { });
+            // #endregion
+            console.error('Error deleting image:', error);
+            showToast('Failed to delete image');
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     useEffect(() => {
         getLocalStorage();
     }, []);
@@ -520,7 +602,8 @@ const UserProfile = (props: Props) => {
             <KeyboardAwareScrollView
                 keyboardShouldPersistTaps="always"
                 // automaticallyAdjustKeyboardInsets={true}
-                style={{ backgroundColor: '#FFF', flex: 1 }}>
+                style={{ backgroundColor: '#FFF', flex: 1 }}
+                contentContainerStyle={{ paddingBottom: 100 }}>
                 {/* <View
               style={{
                 width: '100%',
@@ -583,7 +666,8 @@ const UserProfile = (props: Props) => {
                         onPress={() => {
                             // showToast("temporarily unavailable");
                             // toggleOverlay()
-                            if (formData?.imgUrl) {
+                            const hasValidImage = formData?.imgUrl && formData.imgUrl !== 'DELETED';
+                            if (hasValidImage) {
                                 setImageVisible(true)
                                 setImageData([{ uri: formData?.imgUrl }])
                             } else {
@@ -596,14 +680,16 @@ const UserProfile = (props: Props) => {
                             width: height * 0.14,
                             borderRadius: height * 0.7,
                         }}>
-                        {formData?.imgUrl ? (
+                        {formData?.imgUrl && formData.imgUrl !== 'DELETED' ? (
                             <Image
                                 source={{ uri: formData?.imgUrl }}
                                 style={{
                                     height: height * 0.14,
                                     width: height * 0.14,
                                     borderRadius: height * 0.7,
+                                    backgroundColor: '#E8E8E8',
                                 }}
+                                onError={(e) => console.log('Image load error:', e.nativeEvent.error)}
                             />
                         ) : (
                             <CommonPhotoClick />
@@ -816,7 +902,7 @@ const UserProfile = (props: Props) => {
                         
                             */}
                     </View>
-                    
+
 
                     {/* Continue Button */}
                     <TouchableOpacity
@@ -827,7 +913,7 @@ const UserProfile = (props: Props) => {
                     {!visible && <Toast />}
                 </View>
                 {/* </KeyboardAvoidingView> */}
-                
+
                 <Overlay isVisible={visible} onBackdropPress={toggleOverlay}>
                     <View style={{ width: width / 1.5, padding: 10 }}>
                         <View style={{ marginVertical: 5 }}>
@@ -857,6 +943,20 @@ const UserProfile = (props: Props) => {
                                 Open Gallery
                             </Text>
                         </TouchableOpacity>
+                        {formData?.imgUrl ? (
+                            <TouchableOpacity
+                                onPress={() => deleteImage()}
+                                style={{
+                                    padding: 10,
+                                    borderWidth: 0.5,
+                                    marginVertical: 5,
+                                    backgroundColor: '#D32F2F',
+                                }}>
+                                <Text style={{ textAlign: 'center', color: '#FFF' }}>
+                                    Delete Image
+                                </Text>
+                            </TouchableOpacity>
+                        ) : null}
                     </View>
                 </Overlay>
             </KeyboardAwareScrollView>

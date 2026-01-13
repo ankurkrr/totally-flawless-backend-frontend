@@ -4,11 +4,14 @@
 // Fallback remains to the previous production URL to avoid breakage in local dev.
 const API_URL_PROD = "https://api.totallyflawless.co"
 const API_URL_DEV = "http://164.52.197.9:3001" // Found as commented out in multiple screens
-const API_URL_LOCAL = "http://192.168.1.11:3000" // Found in BookVirtualAppointment.tsx
 
+const API_URL_LOCAL = "http://10.0.2.2:3000"  // 10.0.2.2 = localhost for Android emulator
 
-// Default to Prod if env var not set, but export others for easy switching/testing
+// Main API uses production (for Twilio, etc.)
 const API_URL = process.env.API_URL || API_URL_PROD
+
+// Upload URL uses local backend (has the /send-upload endpoint)
+const API_URL_UPLOAD = API_URL_LOCAL
 
 const TERMS_URL = "https://totallyflawless.co/terms-and-conditions"
 const PRIVACY_URL = "https://totallyflawless.co/privacy-policy"
@@ -43,6 +46,7 @@ export {
     API_URL_PROD,
     API_URL_DEV,
     API_URL_LOCAL,
+    API_URL_UPLOAD,
 
     S3_REGION,
     O_AUTH,
