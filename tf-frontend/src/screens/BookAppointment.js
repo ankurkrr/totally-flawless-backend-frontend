@@ -544,19 +544,30 @@ const BookAppointment = ({ navigation }) => {
             </Text>
           </View>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <TouchableOpacity onPress={() => setShowClock(true)}>
-              <Text
+            <TouchableOpacity 
+              activeOpacity={0.6}
+              onPress={() => {
+                console.log('Hour pressed - opening time picker');
+                setShowClock(true);
+              }}>
+              <View
                 style={{
                   borderWidth: 1,
                   borderColor: 'black',
                   padding: 10,
-                  color: 'black',
                   borderRadius: 10,
-                  textAlign: 'center',
-                  fontSize: 18,
+                  minWidth: 50,
+                  alignItems: 'center',
                 }}>
-                {hh}
-              </Text>
+                <Text
+                  style={{
+                    color: 'black',
+                    textAlign: 'center',
+                    fontSize: 18,
+                  }}>
+                  {hh}
+                </Text>
+              </View>
             </TouchableOpacity>
             <View style={{ paddingHorizontal: 5 }}>
               <Text
@@ -568,19 +579,30 @@ const BookAppointment = ({ navigation }) => {
                 :
               </Text>
             </View>
-            <TouchableOpacity onPress={() => setShowClock(true)}>
-              <Text
+            <TouchableOpacity 
+              activeOpacity={0.6}
+              onPress={() => {
+                console.log('Minute pressed - opening time picker');
+                setShowClock(true);
+              }}>
+              <View
                 style={{
                   borderWidth: 1,
                   borderColor: 'black',
                   padding: 10,
-                  color: 'black',
                   borderRadius: 10,
-                  textAlign: 'center',
-                  fontSize: 18,
+                  minWidth: 50,
+                  alignItems: 'center',
                 }}>
-                {mm}
-              </Text>
+                <Text
+                  style={{
+                    color: 'black',
+                    textAlign: 'center',
+                    fontSize: 18,
+                  }}>
+                  {mm}
+                </Text>
+              </View>
             </TouchableOpacity>
             <View
               style={{
