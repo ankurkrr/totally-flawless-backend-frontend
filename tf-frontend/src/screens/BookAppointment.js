@@ -9,7 +9,9 @@ import {
   Alert,
   StyleSheet,
   Modal,
+  StatusBar,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Icon } from '@rneui/base';
 import dayjs from 'dayjs';
 import { useEffect, useState, useRef } from 'react';
@@ -427,30 +429,33 @@ const BookAppointment = ({ navigation }) => {
 
 
   return (
-    <ScrollView style={{ height: height, backgroundColor: '#FFF' }}>
-      <View style={{ padding: 15 }}>
-        <View style={{ flexDirection: 'row', marginTop: 10 }}>
-          <View>
-            <Icon
-              color="#000"
-              name="arrow-back-ios"
-              onPress={() => navigation.goBack()}
-              size={25}
-              type="material"
-            />
-          </View>
-          <View style={{ justifyContent: 'center', paddingLeft: 10 }}>
-            <Text
-              style={{
-                color: 'black',
-                fontSize: 18,
-                fontWeight: 700,
-                fontFamily: 'Poppins-Regular',
-              }}>
-              Book Appointment
-            </Text>
-          </View>
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#FFF' }}>
+      <StatusBar barStyle="dark-content" backgroundColor="#FFF" />
+      {/* Fixed Header */}
+      <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 15, paddingVertical: 12, backgroundColor: '#FFF' }}>
+        <View>
+          <Icon
+            color="#000"
+            name="arrow-back-ios"
+            onPress={() => navigation.goBack()}
+            size={25}
+            type="material"
+          />
         </View>
+        <View style={{ justifyContent: 'center', paddingLeft: 10 }}>
+          <Text
+            style={{
+              color: 'black',
+              fontSize: 18,
+              fontWeight: 700,
+              fontFamily: 'Poppins-Regular',
+            }}>
+            Book Appointment
+          </Text>
+        </View>
+      </View>
+      <ScrollView style={{ flex: 1, backgroundColor: '#FFF' }}>
+        <View style={{ padding: 15 }}>
         <View
           style={{ flexDirection: 'row', marginTop: 10, paddingHorizontal: 5 }}>
           <Text
@@ -761,7 +766,8 @@ const BookAppointment = ({ navigation }) => {
 
       </Modal>
 
-    </ScrollView>
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
