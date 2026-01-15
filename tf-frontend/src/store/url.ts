@@ -1,17 +1,27 @@
 
 // Load API URL from environment at build/runtime. Set `API_URL` in your
 // CI or local env (e.g. using react-native-config or babel-plugin-inline-dotenv).
-// Fallback remains to the previous production URL to avoid breakage in local dev.
-const API_URL_PROD = "https://api.totallyflawless.co"
-const API_URL_DEV = "http://164.52.197.9:3001" // Found as commented out in multiple screens
 
-const API_URL_LOCAL = "http://10.0.2.2:3000"  // 10.0.2.2 = localhost for Android emulator
+// Production API URL - Google Cloud Run
+const API_URL_PROD = "https://flawless-api-294261947866.us-central1.run.app"
 
-// Main API uses production (for Twilio, etc.)
+// Legacy production URL (old server)
+const API_URL_LEGACY = "https://api.totallyflawless.co"
+
+// Development URL
+const API_URL_DEV = "http://164.52.197.9:3001"
+
+// Local development URL (for Android emulator - 10.0.2.2 = localhost)
+const API_URL_LOCAL = "http://10.0.2.2:3000"
+
+// ============================================
+// PRODUCTION CONFIGURATION
+// ============================================
+// Main API uses production Cloud Run endpoint
 const API_URL = process.env.API_URL || API_URL_PROD
 
-// Upload URL uses local backend (has the /send-upload endpoint)
-const API_URL_UPLOAD = API_URL_LOCAL
+// Upload URL also uses production
+const API_URL_UPLOAD = API_URL_PROD
 
 const TERMS_URL = "https://totallyflawless.co/terms-and-conditions"
 const PRIVACY_URL = "https://totallyflawless.co/privacy-policy"
