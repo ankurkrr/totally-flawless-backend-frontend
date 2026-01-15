@@ -1,9 +1,9 @@
-import React, {useState, useEffect} from 'react';
-import {View, Platform} from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Platform } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 const TimePicker = props => {
-  const {changeTime} = props;
+  const { changeTime } = props;
   const [date, setDate] = useState(new Date());
 
   const roundToNearest15Minutes = date => {
@@ -34,7 +34,7 @@ const TimePicker = props => {
   return (
     <View>
       <DateTimePicker
-        style={{height: 150}}
+        style={{ height: 150 }}
         testID="dateTimePicker"
         value={date}
         mode="time"
