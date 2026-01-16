@@ -442,13 +442,18 @@ const UserProfile = (props: Props) => {
                     setIsLoading(true);
                     console.log('Response = ', response);
                     setImageUri(response.assets[0].uri);
-                    // const name = formData?.id ? `profile_${formData.id}` : ""
-                    const imgUrl = await uploadToS3(response.assets[0]);
-                    console.log('imgUrl camera >>>>', imgUrl)
-                    setFormData({ ...formData, imgUrl: imgUrl });
-                    setTimeout(() => {
+                    try {
+                        // const name = formData?.id ? `profile_${formData.id}` : ""
+                        const imgUrl = await uploadToS3(response.assets[0]);
+                        console.log('imgUrl camera >>>>', imgUrl)
+                        setFormData({ ...formData, imgUrl: imgUrl });
+                    } catch (uploadError) {
+                        console.error('Upload error:', uploadError);
+                        showToast('Failed to upload image. Please try again.');
+                        setImageUri(formData.imgUrl || null); // Revert to previous image
+                    } finally {
                         setIsLoading(false);
-                    }, 1000);
+                    }
                     // Handle the response (e.g., display the image or upload it)
                 }
             });
@@ -478,18 +483,25 @@ const UserProfile = (props: Props) => {
                     setIsLoading(true);
                     console.log('Response = ', response);
                     let imageUri = response.assets?.[0]?.uri ?? null;
+                    const previousImageUrl = formData.imgUrl;
                     setImageUri(imageUri);
-                    if (response.assets && response.assets[0]) {
-                        const imgUrl = await uploadToS3(response.assets[0]);
-                        setFormData({ ...formData, imgUrl: imgUrl });
-                    }
-                    setTimeout(() => {
+                    try {
+                        if (response.assets && response.assets[0]) {
+                            const imgUrl = await uploadToS3(response.assets[0]);
+                            setFormData({ ...formData, imgUrl: imgUrl });
+                        }
+                    } catch (uploadError) {
+                        console.error('Upload error:', uploadError);
+                        showToast('Failed to upload image. Please try again.');
+                        setImageUri(previousImageUrl || null); // Revert to previous image
+                    } finally {
                         setIsLoading(false);
-                    }, 1000);
+                    }
                 }
             });
         } catch (error) {
             setVisible(false);
+            setIsLoading(false);
             console.log(error);
         }
     };
