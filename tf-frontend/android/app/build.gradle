@@ -12,7 +12,7 @@ if (localPropertiesFile.exists()) {
 }
 
 react {
-    entryFile.set(file("index.js"))
+    entryFile.set(file("../../index.js"))
 }
 
 
