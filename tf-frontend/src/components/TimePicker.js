@@ -1,12 +1,10 @@
-import React, {useState} from 'react';
-import {View, Platform} from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Platform } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 const TimePicker = props => {
-  const {changeTime} = props;
+  const { changeTime } = props;
   const [date, setDate] = useState(new Date());
-  const [mode, setMode] = useState('time');
-  const [show, setShow] = useState(true);
 
   const roundToNearest15Minutes = date => {
     const ms = 1000 * 60 * 15;
@@ -14,11 +12,13 @@ const TimePicker = props => {
   };
 
   const onChange = (event, selectedDate) => {
-    if (event.type === 'dismissed') return;
+    if (event.type === 'dismissed') {
+      // User dismissed without selecting - still call changeTime with current values
+      return;
+    }
 
     const currentDate = selectedDate || date;
     const roundedDate = roundToNearest15Minutes(currentDate);
-    setShow(Platform.OS === 'ios');
     setDate(roundedDate);
 
     const hours = roundedDate.getHours();
@@ -30,21 +30,20 @@ const TimePicker = props => {
     changeTime(formattedHours, formattedMinutes, ampm);
   };
 
+  // Always render the picker - visibility is controlled by parent's showClock state
   return (
     <View>
-      {show && (
-        <DateTimePicker
-          style={{height: 150}}
-          testID="dateTimePicker"
-          value={date}
-          mode={mode}
-          themeVariant="light"
-          is24Hour={false}
-          display="spinner"
-          onChange={onChange}
-          minuteInterval={15}
-        />
-      )}
+      <DateTimePicker
+        style={{ height: 150 }}
+        testID="dateTimePicker"
+        value={date}
+        mode="time"
+        themeVariant="light"
+        is24Hour={false}
+        display="spinner"
+        onChange={onChange}
+        minuteInterval={15}
+      />
     </View>
   );
 };

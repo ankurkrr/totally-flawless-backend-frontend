@@ -4,7 +4,9 @@ import {
   TouchableOpacity,
   ScrollView,
   Dimensions,
+  StatusBar,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import React, { useRef, useState, useEffect } from 'react';
 import { Icon } from '@rneui/base';
 import { Tooltip } from '@rneui/themed';
@@ -181,35 +183,37 @@ const SavedAddress = ({ navigation }) => {
   }, [guestUser, cartId, cartDetails]);
 
   return (
-    <View>
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#FFF' }}>
+      <StatusBar barStyle="dark-content" backgroundColor="#FFF" />
+      {/* Fixed Header */}
+      <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 15, paddingVertical: 12, backgroundColor: '#FFF' }}>
+        <View>
+          <Icon
+            color="#000"
+            name="arrow-back-ios"
+            onPress={() => navigation.goBack()}
+            size={25}
+            type="material"
+          />
+        </View>
+        <View style={{ justifyContent: 'center', paddingLeft: 10 }}>
+          <Text
+            style={{
+              color: 'black',
+              fontSize: 18,
+              fontWeight: 700,
+              fontFamily: 'Poppins-Regular',
+            }}>
+            Saved Address
+          </Text>
+        </View>
+      </View>
       <ScrollView
         style={{
           backgroundColor: 'white',
-          height: height,
+          flex: 1,
           paddingHorizontal: 15,
         }}>
-        <View style={{ flexDirection: 'row', marginTop: 25, marginBottom: 15 }}>
-          <View>
-            <Icon
-              color="#000"
-              name="arrow-back-ios"
-              onPress={() => navigation.goBack()}
-              size={25}
-              type="material"
-            />
-          </View>
-          <View style={{ justifyContent: 'center', paddingLeft: 10 }}>
-            <Text
-              style={{
-                color: 'black',
-                fontSize: 18,
-                fontWeight: 700,
-                fontFamily: 'Poppins-Regular',
-              }}>
-              Saved Address
-            </Text>
-          </View>
-        </View>
         {addressList.map((item, index) => (
           <TouchableOpacity
             key={index}
@@ -355,7 +359,7 @@ const SavedAddress = ({ navigation }) => {
         
       </ScrollView>
       <Toast />
-    </View>
+    </SafeAreaView>
   );
 };
 

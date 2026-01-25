@@ -9,7 +9,9 @@ import {
   Alert,
   StyleSheet,
   Modal,
+  StatusBar,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Icon } from '@rneui/base';
 import dayjs from 'dayjs';
 import { useEffect, useState, useRef } from 'react';
@@ -427,341 +429,367 @@ const BookAppointment = ({ navigation }) => {
 
 
   return (
-    <ScrollView style={{ height: height, backgroundColor: '#FFF' }}>
-      <View style={{ padding: 15 }}>
-        <View style={{ flexDirection: 'row', marginTop: 10 }}>
-          <View>
-            <Icon
-              color="#000"
-              name="arrow-back-ios"
-              onPress={() => navigation.goBack()}
-              size={25}
-              type="material"
-            />
-          </View>
-          <View style={{ justifyContent: 'center', paddingLeft: 10 }}>
-            <Text
-              style={{
-                color: 'black',
-                fontSize: 18,
-                fontWeight: 700,
-                fontFamily: 'Poppins-Regular',
-              }}>
-              Book Appointment
-            </Text>
-          </View>
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#FFF' }}>
+      <StatusBar barStyle="dark-content" backgroundColor="#FFF" />
+      {/* Fixed Header */}
+      <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 15, paddingVertical: 12, backgroundColor: '#FFF' }}>
+        <View>
+          <Icon
+            color="#000"
+            name="arrow-back-ios"
+            onPress={() => navigation.goBack()}
+            size={25}
+            type="material"
+          />
         </View>
-        <View
-          style={{ flexDirection: 'row', marginTop: 10, paddingHorizontal: 5 }}>
+        <View style={{ justifyContent: 'center', paddingLeft: 10 }}>
           <Text
             style={{
               color: 'black',
-              fontSize: 17,
-              fontWeight: 500,
+              fontSize: 18,
+              fontWeight: 700,
               fontFamily: 'Poppins-Regular',
             }}>
-            Enter your address
+            Book Appointment
           </Text>
         </View>
-        <View
-          style={{
-            flexDirection: 'row',
-            marginTop: 10,
-            padding: 15,
-            borderColor: '#eee',
-            borderWidth: 1,
-            justifyContent: 'space-between',
-            borderRadius: 10,
-          }}>
-          <View>
+      </View>
+      <ScrollView style={{ flex: 1, backgroundColor: '#FFF' }}>
+        <View style={{ padding: 15 }}>
+          <View
+            style={{ flexDirection: 'row', marginTop: 10, paddingHorizontal: 5 }}>
             <Text
               style={{
                 color: 'black',
-                fontFamily: 'Poppins-Reglar',
-                fontSize: 14,
-                fontWeight: 600,
-              }}>
-              {defaultAddress.length > 40
-                ? `${defaultAddress.slice(0, 39)}.......`
-                : defaultAddress}
-            </Text>
-          </View>
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate('SavedAddress', {
-                guestUser: false,
-                cartId: cartId,
-                cartDetails: cartDetails,
-              });
-            }}>
-            <Text
-              style={{
-                color: '#D69316',
-                fontFamily: 'Poppins-Reglar',
-                fontSize: 14,
-                fontWeight: 600,
-              }}>
-              {defaultAddress.length > 0 ? 'Change' : 'Add Address'}
-            </Text>
-          </TouchableOpacity>
-        </View>
-        <View style={{ marginTop: 10 }}>
-          <DateTimePicker
-            headerContainerStyle={{ backgroundColor: '#F3C46E' }}
-            calendarTextStyle={{ color: '#000' }}
-            headerTextStyle={{ color: '#FFF' }}
-            todayTextStyle={{ color: '#000' }}
-            weekDaysTextStyle={{ color: '#000' }}
-            weekDaysContainerStyle={{ color: '#000' }}
-            selectedItemColor="#000"
-            dayContainerStyle={{ color: '#000' }}
-            mode="single"
-            minDate={todaysDate}
-            maxDate={maxDate}
-            date={date}
-            onChange={params => {
-              console.log(params.date)
-              const date = params.date;
-              setDate(date)
-            }}
-          />
-        </View>
-        <View style={{ flexDirection: 'column' }}>
-          <View style={{ marginBottom: 10 }}>
-            <Text
-              style={{
-                color: 'black',
-                fontFamily: 'Poppins-Regular',
                 fontSize: 17,
                 fontWeight: 500,
-              }}>
-              Enter your time
-            </Text>
-          </View>
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <TouchableOpacity onPress={() => setShowClock(true)}>
-              <Text
-                style={{
-                  borderWidth: 1,
-                  borderColor: 'black',
-                  padding: 10,
-                  color: 'black',
-                  borderRadius: 10,
-                  textAlign: 'center',
-                  fontSize: 18,
-                }}>
-                {hh}
-              </Text>
-            </TouchableOpacity>
-            <View style={{ paddingHorizontal: 5 }}>
-              <Text
-                style={{
-                  fontSize: 18,
-                  fontFamily: 'Poppins-Regular',
-                  color: 'black',
-                }}>
-                :
-              </Text>
-            </View>
-            <TouchableOpacity onPress={() => setShowClock(true)}>
-              <Text
-                style={{
-                  borderWidth: 1,
-                  borderColor: 'black',
-                  padding: 10,
-                  color: 'black',
-                  borderRadius: 10,
-                  textAlign: 'center',
-                  fontSize: 18,
-                }}>
-                {mm}
-              </Text>
-            </TouchableOpacity>
-            <View
-              style={{
-                flexDirection: 'column',
-                borderRadius: 10,
-                marginHorizontal: 15,
-              }}>
-              <TouchableOpacity
-                onPress={() => setAmpm('AM')}
-                style={{
-                  backgroundColor: ampm === 'AM' ? '#000' : '#FFF',
-                  paddingHorizontal: 15,
-                  // paddingTop: 2,
-                  borderTopLeftRadius: 10,
-                  borderTopRightRadius: 10,
-                  borderColor: 'black',
-                  borderWidth: 0.5,
-                }}>
-                <Text
-                  style={{
-                    fontSize: 13,
-                    fontFamily: 'Poppins-Regular',
-                    color: ampm === 'AM' ? '#FFF' : '#000',
-                  }}>
-                  AM
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => setAmpm('PM')}
-                style={{
-                  backgroundColor: ampm === 'PM' ? '#000' : '#FFF',
-                  paddingHorizontal: 15,
-                  borderBottomLeftRadius: 10,
-                  borderBottomRightRadius: 10,
-                  borderColor: 'black',
-                  borderWidth: 0.5,
-                }}>
-                <Text
-                  style={{
-                    fontSize: 13,
-                    fontFamily: 'Poppins-Regular',
-                    color: ampm === 'PM' ? '#FFF' : '#000',
-                  }}>
-                  PM
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-        {showClock && (
-          <View
-            style={{
-              marginTop: 10,
-            }}>
-            <TimePicker changeTime={(x, y, z) => changeTime(x, y, z)} />
-          </View>
-        )}
-        <View
-          style={{
-            justifyContent: 'center',
-            alignItems: 'center',
-            marginTop: 10,
-          }}>
-          <TouchableOpacity
-            onPress={() => submitHandler()}
-            style={{
-              backgroundColor: '#000',
-              width: '100%',
-              alignItems: 'center',
-              paddingVertical: 15,
-              borderRadius: 35,
-            }}>
-            <Text
-              style={{
-                fontSize: 20,
-                color: '#FFF',
-                fontWeight: 'bold',
                 fontFamily: 'Poppins-Regular',
               }}>
-              Confirm
+              Enter your address
             </Text>
-          </TouchableOpacity>
-        </View>
-        <Toast />
-
-
-
-      </View>
-
-      <Modal animationType="fade"
-        visible={immediateBookModal}
-        transparent={true}
-        onRequestClose={() => {
-          setImmediateBookModal(false)
-        }}
-      >
-
-        <View style={styles.modalContainer}>
-          <View style={[styles.modalContent, { minHeight: mvs(250), backgroundColor: COLORS.white }]}>
-
-
-            <View style={{ marginTop: 20 }} >
-              {
-                bookingType === 'now' ?
-                  <Text style={[GlobalStyles.txtM16Dark, { textAlign: 'center' }]}>
-                    The time you’ve selected is not within 24 hours. Would you like to go back and select 'Future Booking' instead?
-                  </Text>
-                  :
-                  <Text style={[GlobalStyles.txtM16Dark, { textAlign: 'center' }]}>
-                    The time you’ve selected is within 24 hours. Would you like to go back and select 'Immediate Booking' instead?
-                  </Text>
-              }
-
-
-            </View>
-
-            <View style={[GlobalStyles.rowCenterSpaceBetween, { width: '100%', marginTop: mvs(50) }]} >
-
-              <TouchableOpacity
-                onPress={() => {
-
-                  // 
-                  handleYesPress();
-
-                }}
-                style={{
-                  backgroundColor: COLORS.darkTxt,
-                  width: '45%',
-                  alignItems: 'center',
-                  paddingVertical: 17,
-                  borderRadius: 35,
-                  // borderWidth: 2,
-                  // borderColor: '#000',
-
-                }}>
-
-                <Text
-                  style={{
-                    fontSize: 20,
-                    color: COLORS.white,
-                    fontWeight: 'bold',
-                    fontFamily: 'Poppins-Regular',
-                  }}>
-                  Yes
-                </Text>
-
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                onPress={() => {
-                  setImmediateBookModal(false)
-                }}
-                style={{
-                  backgroundColor: COLORS.greyTxt,
-                  width: '45%',
-                  alignItems: 'center',
-                  paddingVertical: 17,
-                  borderRadius: 35,
-                  // borderWidth: 2,
-                  // borderColor: '#000',
-
-                }}>
-
-                <Text
-                  style={{
-                    fontSize: 20,
-                    color: COLORS.white,
-                    fontWeight: 'bold',
-                    fontFamily: 'Poppins-Regular',
-                  }}>
-                  No
-                </Text>
-
-              </TouchableOpacity>
-
-
-            </View>
-
-
-
           </View>
+          <View
+            style={{
+              flexDirection: 'row',
+              marginTop: 10,
+              padding: 15,
+              borderColor: '#eee',
+              borderWidth: 1,
+              justifyContent: 'space-between',
+              borderRadius: 10,
+            }}>
+            <View>
+              <Text
+                style={{
+                  color: 'black',
+                  fontFamily: 'Poppins-Reglar',
+                  fontSize: 14,
+                  fontWeight: 600,
+                }}>
+                {defaultAddress.length > 40
+                  ? `${defaultAddress.slice(0, 39)}.......`
+                  : defaultAddress}
+              </Text>
+            </View>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('SavedAddress', {
+                  guestUser: false,
+                  cartId: cartId,
+                  cartDetails: cartDetails,
+                });
+              }}>
+              <Text
+                style={{
+                  color: '#D69316',
+                  fontFamily: 'Poppins-Reglar',
+                  fontSize: 14,
+                  fontWeight: 600,
+                }}>
+                {defaultAddress.length > 0 ? 'Change' : 'Add Address'}
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <View style={{ marginTop: 10 }}>
+            <DateTimePicker
+              headerContainerStyle={{ backgroundColor: '#F3C46E' }}
+              calendarTextStyle={{ color: '#000' }}
+              headerTextStyle={{ color: '#FFF' }}
+              todayTextStyle={{ color: '#000' }}
+              weekDaysTextStyle={{ color: '#000' }}
+              weekDaysContainerStyle={{ color: '#000' }}
+              selectedItemColor="#000"
+              dayContainerStyle={{ color: '#000' }}
+              mode="single"
+              minDate={todaysDate}
+              maxDate={maxDate}
+              date={date}
+              onChange={params => {
+                console.log(params.date)
+                const date = params.date;
+                setDate(date)
+              }}
+            />
+          </View>
+          <View style={{ flexDirection: 'column' }}>
+            <View style={{ marginBottom: 10 }}>
+              <Text
+                style={{
+                  color: 'black',
+                  fontFamily: 'Poppins-Regular',
+                  fontSize: 17,
+                  fontWeight: 500,
+                }}>
+                Enter your time
+              </Text>
+            </View>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <TouchableOpacity
+                activeOpacity={0.6}
+                onPress={() => {
+                  console.log('Hour pressed - opening time picker');
+                  setShowClock(true);
+                }}>
+                <View
+                  style={{
+                    borderWidth: 1,
+                    borderColor: 'black',
+                    padding: 10,
+                    borderRadius: 10,
+                    minWidth: 50,
+                    alignItems: 'center',
+                  }}>
+                  <Text
+                    style={{
+                      color: 'black',
+                      textAlign: 'center',
+                      fontSize: 18,
+                    }}>
+                    {hh}
+                  </Text>
+                </View>
+              </TouchableOpacity>
+              <View style={{ paddingHorizontal: 5 }}>
+                <Text
+                  style={{
+                    fontSize: 18,
+                    fontFamily: 'Poppins-Regular',
+                    color: 'black',
+                  }}>
+                  :
+                </Text>
+              </View>
+              <TouchableOpacity
+                activeOpacity={0.6}
+                onPress={() => {
+                  console.log('Minute pressed - opening time picker');
+                  setShowClock(true);
+                }}>
+                <View
+                  style={{
+                    borderWidth: 1,
+                    borderColor: 'black',
+                    padding: 10,
+                    borderRadius: 10,
+                    minWidth: 50,
+                    alignItems: 'center',
+                  }}>
+                  <Text
+                    style={{
+                      color: 'black',
+                      textAlign: 'center',
+                      fontSize: 18,
+                    }}>
+                    {mm}
+                  </Text>
+                </View>
+              </TouchableOpacity>
+              <View
+                style={{
+                  flexDirection: 'column',
+                  borderRadius: 10,
+                  marginHorizontal: 15,
+                }}>
+                <TouchableOpacity
+                  onPress={() => setAmpm('AM')}
+                  style={{
+                    backgroundColor: ampm === 'AM' ? '#000' : '#FFF',
+                    paddingHorizontal: 15,
+                    // paddingTop: 2,
+                    borderTopLeftRadius: 10,
+                    borderTopRightRadius: 10,
+                    borderColor: 'black',
+                    borderWidth: 0.5,
+                  }}>
+                  <Text
+                    style={{
+                      fontSize: 13,
+                      fontFamily: 'Poppins-Regular',
+                      color: ampm === 'AM' ? '#FFF' : '#000',
+                    }}>
+                    AM
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => setAmpm('PM')}
+                  style={{
+                    backgroundColor: ampm === 'PM' ? '#000' : '#FFF',
+                    paddingHorizontal: 15,
+                    borderBottomLeftRadius: 10,
+                    borderBottomRightRadius: 10,
+                    borderColor: 'black',
+                    borderWidth: 0.5,
+                  }}>
+                  <Text
+                    style={{
+                      fontSize: 13,
+                      fontFamily: 'Poppins-Regular',
+                      color: ampm === 'PM' ? '#FFF' : '#000',
+                    }}>
+                    PM
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+          {showClock && (
+            <View
+              style={{
+                marginTop: 10,
+              }}>
+              <TimePicker changeTime={(x, y, z) => changeTime(x, y, z)} />
+            </View>
+          )}
+          <View
+            style={{
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginTop: 10,
+            }}>
+            <TouchableOpacity
+              onPress={() => submitHandler()}
+              style={{
+                backgroundColor: '#000',
+                width: '100%',
+                alignItems: 'center',
+                paddingVertical: 15,
+                borderRadius: 35,
+              }}>
+              <Text
+                style={{
+                  fontSize: 20,
+                  color: '#FFF',
+                  fontWeight: 'bold',
+                  fontFamily: 'Poppins-Regular',
+                }}>
+                Confirm
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <Toast />
+
+
+
         </View>
 
-      </Modal>
+        <Modal animationType="fade"
+          visible={immediateBookModal}
+          transparent={true}
+          onRequestClose={() => {
+            setImmediateBookModal(false)
+          }}
+        >
 
-    </ScrollView>
+          <View style={styles.modalContainer}>
+            <View style={[styles.modalContent, { minHeight: mvs(250), backgroundColor: COLORS.white }]}>
+
+
+              <View style={{ marginTop: 20 }} >
+                {
+                  bookingType === 'now' ?
+                    <Text style={[GlobalStyles.txtM16Dark, { textAlign: 'center' }]}>
+                      The time you’ve selected is not within 24 hours. Would you like to go back and select 'Future Booking' instead?
+                    </Text>
+                    :
+                    <Text style={[GlobalStyles.txtM16Dark, { textAlign: 'center' }]}>
+                      The time you’ve selected is within 24 hours. Would you like to go back and select 'Immediate Booking' instead?
+                    </Text>
+                }
+
+
+              </View>
+
+              <View style={[GlobalStyles.rowCenterSpaceBetween, { width: '100%', marginTop: mvs(50) }]} >
+
+                <TouchableOpacity
+                  onPress={() => {
+
+                    // 
+                    handleYesPress();
+
+                  }}
+                  style={{
+                    backgroundColor: COLORS.darkTxt,
+                    width: '45%',
+                    alignItems: 'center',
+                    paddingVertical: 17,
+                    borderRadius: 35,
+                    // borderWidth: 2,
+                    // borderColor: '#000',
+
+                  }}>
+
+                  <Text
+                    style={{
+                      fontSize: 20,
+                      color: COLORS.white,
+                      fontWeight: 'bold',
+                      fontFamily: 'Poppins-Regular',
+                    }}>
+                    Yes
+                  </Text>
+
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  onPress={() => {
+                    setImmediateBookModal(false)
+                  }}
+                  style={{
+                    backgroundColor: COLORS.greyTxt,
+                    width: '45%',
+                    alignItems: 'center',
+                    paddingVertical: 17,
+                    borderRadius: 35,
+                    // borderWidth: 2,
+                    // borderColor: '#000',
+
+                  }}>
+
+                  <Text
+                    style={{
+                      fontSize: 20,
+                      color: COLORS.white,
+                      fontWeight: 'bold',
+                      fontFamily: 'Poppins-Regular',
+                    }}>
+                    No
+                  </Text>
+
+                </TouchableOpacity>
+
+
+              </View>
+
+
+
+            </View>
+          </View>
+
+        </Modal>
+
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 

@@ -6,7 +6,9 @@ import {
   ScrollView,
   Dimensions,
   Pressable,
+  StatusBar,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import {CheckBox, Icon, Input} from '@rneui/base';
 import dayjs from 'dayjs';
 import {useState} from 'react';
@@ -183,14 +185,10 @@ const AddAddress = ({navigation}) => {
   };
 
   return (
-    <View
-      style={{
-        backgroundColor: 'white',
-        height: height,
-        paddingHorizontal: 15,
-        zIndex: 10,
-      }}>
-      <View style={{flexDirection: 'row', marginTop: 25}}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#FFF' }}>
+      <StatusBar barStyle="dark-content" backgroundColor="#FFF" />
+      {/* Fixed Header */}
+      <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 15, paddingVertical: 12, backgroundColor: '#FFF' }}>
         <View>
           <Icon
             color="#000"
@@ -200,7 +198,7 @@ const AddAddress = ({navigation}) => {
             type="material"
           />
         </View>
-        <View style={{justifyContent: 'center', paddingLeft: 10}}>
+        <View style={{ justifyContent: 'center', paddingLeft: 10 }}>
           <Text
             style={{
               color: 'black',
@@ -212,6 +210,13 @@ const AddAddress = ({navigation}) => {
           </Text>
         </View>
       </View>
+      <View
+        style={{
+          backgroundColor: 'white',
+          flex: 1,
+          paddingHorizontal: 15,
+          zIndex: 10,
+        }}>
       <View style={{flexDirection: 'column', marginTop: 10, zIndex: 99}}>
         <View>
           <Input
@@ -331,8 +336,9 @@ const AddAddress = ({navigation}) => {
           </Text>
         </TouchableOpacity>
       </View>
-      <Toast />
-    </View>
+        <Toast />
+      </View>
+    </SafeAreaView>
   );
 };
 
