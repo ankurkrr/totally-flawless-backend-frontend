@@ -1,9 +1,10 @@
 // Production API URLs
-// api.totallyflawless.co = Old server with Twilio SMS working
+// api.totallyflawless.co = Old server (EC2 instance)
+// apitmp.totallyflawless.co = New AWS RDS deployment
 // Cloud Run = New deployment with /send-upload endpoint
 
-// Main API - uses old server for Twilio OTP/SMS authentication
-const API_URL_PROD = "https://api.totallyflawless.co"
+// Main API - uses new AWS RDS backend
+const API_URL_PROD = "https://apitmp.totallyflawless.co"
 const API_URL = API_URL_PROD
 
 // Upload URL - uses new Cloud Run deployment (has /send-upload endpoint)
