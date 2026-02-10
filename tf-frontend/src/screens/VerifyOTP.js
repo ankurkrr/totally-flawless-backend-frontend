@@ -258,6 +258,7 @@ const VerifyOTP = ({ navigation }) => {
 
     // ANDROID TEST BUILD BYPASS
     if (enteredOtp === '0000') {
+      // Android: Dev build (Any phone number)
       if (Platform.OS === 'android' && __DEV__) {
         console.log('Bypassing OTP for Android DEV build');
         const mockData = {
@@ -275,7 +276,7 @@ const VerifyOTP = ({ navigation }) => {
         return;
       }
 
-      // IOS TESTFLIGHT BYPASS
+      // iOS: TestFlight build + Phone 5555555555
       if (Platform.OS === 'ios' && isTestFlight && phone.includes('5555555555')) {
         console.log('Bypassing OTP for iOS TestFlight build');
         const mockData = {

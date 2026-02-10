@@ -16,7 +16,17 @@ const config = {
             /.*\/android\/.*/,
             /.*\/ios\/.*/,
             /.*\.zip/
-        ])
+        ]),
+        resolveRequest: (context, moduleName, platform) => {
+            if (moduleName === 'axios') {
+                // Force resolution to the browser build to avoid "crypto" dependency issues
+                return {
+                    filePath: require.resolve('./node_modules/axios/dist/browser/axios.cjs'),
+                    type: 'sourceFile',
+                };
+            }
+            return context.resolveRequest(context, moduleName, platform);
+        }
     }
 };
 
