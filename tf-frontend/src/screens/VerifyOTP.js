@@ -135,6 +135,10 @@ const VerifyOTP = ({ navigation }) => {
 
           console.log('res?.data verify Otp>>>', res?.data)
           if (res.status === 200) {
+            // Store access token for authenticated API calls
+            if (res.data?.item?.accessToken) {
+              await AsyncStorage.setItem('ACCESS_TOKEN', res.data.item.accessToken);
+            }
             dispatch({ type: IS_GUEST, payload: false })
             await AsyncStorage.setItem('guestUser', 'false');
             if (isNewUser) {
