@@ -8,7 +8,11 @@ import {
   TouchableOpacity,
   Dimensions,
   InteractionManager,
+  Platform,
+  NativeModules,
 } from 'react-native';
+
+const { TestFlightCheck } = NativeModules;
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { useRoute } from '@react-navigation/native';
@@ -33,6 +37,7 @@ const VerifyOTP = ({ navigation }) => {
   const [userId, setUserId] = useState('');
   const [otpId, setOtpId] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [isTestFlight, setIsTestFlight] = useState(false);
   const otpLength = 4;
 
   const dispatch = useDispatch();
@@ -50,6 +55,18 @@ const VerifyOTP = ({ navigation }) => {
         inputRefs.current[0]?.focus();
       }, 50);
     });
+
+    if (Platform.OS === 'ios') {
+      TestFlightCheck?.isTestFlight()
+        .then(isTF => {
+          console.log('Is TestFlight:', isTF);
+          setIsTestFlight(isTF);
+        })
+        .catch(err => {
+          console.log('TestFlight check error:', err);
+          setIsTestFlight(false);
+        });
+    }
 
     return () => focusTask.cancel();
   }, []);
@@ -122,8 +139,161 @@ const VerifyOTP = ({ navigation }) => {
     verifyOtp();
   };
 
+  const handleLoginSuccess = async (data) => {
+    // Store access token for authenticated API calls
+    if (data?.item?.accessToken) {
+      await AsyncStorage.setItem('ACCESS_TOKEN', data.item.accessToken);
+    }
+    dispatch({ type: IS_GUEST, payload: false })
+    await AsyncStorage.setItem('guestUser', 'false');
+    if (isNewUser) {
+      await AsyncStorage.setItem('isNewUser', isNewUser.toString());
+      await AsyncStorage.setItem(
+        'userType',
+        userType === 'Client' ? userType : 'Artist',
+      );
+      await AsyncStorage.setItem('hasMobile', 'true');
+      {
+        userType === 'Client'
+          ? navigation.reset({
+            index: 0,
+            routes: [{ name: 'Register' }],
+          })
+          : navigation.reset({
+            index: 0,
+            routes: [
+              {
+                name: 'ArtistLogin',
+                params: {
+                  hasMobile: 'true',
+                },
+              },
+            ],
+          });
+      }
+    } else {
+      console.log(data.item);
+      console.log('userType', userType);
+      await AsyncStorage.setItem(
+        'userType',
+        userType === 'Client' ? userType : 'Artist',
+      );
+      await AsyncStorage.setItem('isNewUser', isNewUser.toString());
+
+      if (userType == 'Client') {
+        if (data.item.firstName || data.item.email) {
+
+          updateUser({
+            firstName: data.item.firstName,
+            lastName: data.item.lastName,
+            email: data.item.email,
+            userType: 'Client',
+          });
+          navigation.reset({
+            index: 0,
+            routes: [{ name: 'Home', params: { guestUser: false } }],
+          });
+        } else {
+
+          navigation.reset({
+            index: 0,
+            routes: [{ name: 'Register' }],
+          });
+        }
+      } else {
+        if (data.item.firstName) {
+          updateUser({
+            firstName: data.item.firstName,
+            lastName: data.item.lastName,
+            email: data.item.email,
+            userType: 'Artist',
+          });
+          await AsyncStorage.setItem('isRegistered', 'true');
+          await AsyncStorage.setItem(
+            'artistName',
+            data.item.firstName,
+          );
+          if (data.item.isVideoUploaded == 1) {
+            await AsyncStorage.setItem('isArtistDataUploaded', 'true');
+          }
+          if (data.item.isApproved == 1) {
+            // await AsyncStorage.setItem('isArtistDataUploaded', 'true');
+            navigation.reset({
+              index: 0,
+              routes: [
+                {
+                  name: screenNames.ARTIST_HOME,
+                },
+              ],
+            });
+          } else {
+            navigation.reset({
+              index: 0,
+              routes: [
+                {
+                  name: 'ApplicationReviewPage',
+                },
+              ],
+            });
+          }
+        } else {
+          navigation.reset({
+            index: 0,
+            routes: [
+              {
+                name: 'ArtistLogin',
+                params: {
+                  hasMobile: 'true',
+                },
+              },
+            ],
+          });
+        }
+      }
+    }
+  };
+
   const verifyOtp = async () => {
     const enteredOtp = otp.join('');
+
+    // ANDROID TEST BUILD BYPASS
+    if (enteredOtp === '0000') {
+      if (Platform.OS === 'android' && __DEV__) {
+        console.log('Bypassing OTP for Android DEV build');
+        const mockData = {
+          item: {
+            accessToken: "TEST_DEV_TOKEN_0000",
+            firstName: "Test",
+            lastName: "User",
+            email: "test@example.com",
+            isApproved: 1,
+            isVideoUploaded: 1,
+            _id: userId || "test_id"
+          }
+        };
+        await handleLoginSuccess(mockData);
+        return;
+      }
+
+      // IOS TESTFLIGHT BYPASS
+      if (Platform.OS === 'ios' && isTestFlight && phone.includes('5555555555')) {
+        console.log('Bypassing OTP for iOS TestFlight build');
+        const mockData = {
+          item: {
+            accessToken: "TEST_FLIGHT_TOKEN_0000",
+            firstName: "Test",
+            lastName: "Flight",
+            email: "testflight@example.com",
+            isApproved: 1,
+            isVideoUploaded: 1,
+            _id: userId || "test_flight_id"
+          }
+        };
+        await handleLoginSuccess(mockData);
+        return;
+      }
+    }
+
     try {
       await axios
         .post(`${API_URL}/token`, {
@@ -135,117 +305,7 @@ const VerifyOTP = ({ navigation }) => {
 
           console.log('res?.data verify Otp>>>', res?.data)
           if (res.status === 200) {
-            // Store access token for authenticated API calls
-            if (res.data?.item?.accessToken) {
-              await AsyncStorage.setItem('ACCESS_TOKEN', res.data.item.accessToken);
-            }
-            dispatch({ type: IS_GUEST, payload: false })
-            await AsyncStorage.setItem('guestUser', 'false');
-            if (isNewUser) {
-              await AsyncStorage.setItem('isNewUser', isNewUser.toString());
-              await AsyncStorage.setItem(
-                'userType',
-                userType === 'Client' ? userType : 'Artist',
-              );
-              await AsyncStorage.setItem('hasMobile', 'true');
-              {
-                userType === 'Client'
-                  ? navigation.reset({
-                    index: 0,
-                    routes: [{ name: 'Register' }],
-                  })
-                  : navigation.reset({
-                    index: 0,
-                    routes: [
-                      {
-                        name: 'ArtistLogin',
-                        params: {
-                          hasMobile: 'true',
-                        },
-                      },
-                    ],
-                  });
-              }
-            } else {
-              console.log(res.data.item);
-              console.log('userType', userType);
-              await AsyncStorage.setItem(
-                'userType',
-                userType === 'Client' ? userType : 'Artist',
-              );
-              await AsyncStorage.setItem('isNewUser', isNewUser.toString());
-
-              if (userType == 'Client') {
-                if (res.data.item.firstName || res.data.item.email) {
-
-                  updateUser({
-                    firstName: res.data.item.firstName,
-                    lastName: res.data.item.lastName,
-                    email: res.data.item.email,
-                    userType: 'Client',
-                  });
-                  navigation.reset({
-                    index: 0,
-                    routes: [{ name: 'Home', params: { guestUser: false } }],
-                  });
-                } else {
-
-                  navigation.reset({
-                    index: 0,
-                    routes: [{ name: 'Register' }],
-                  });
-                }
-              } else {
-                if (res.data.item.firstName) {
-                  updateUser({
-                    firstName: res.data.item.firstName,
-                    lastName: res.data.item.lastName,
-                    email: res.data.item.email,
-                    userType: 'Artist',
-                  });
-                  await AsyncStorage.setItem('isRegistered', 'true');
-                  await AsyncStorage.setItem(
-                    'artistName',
-                    res.data.item.firstName,
-                  );
-                  if (res.data.item.isVideoUploaded == 1) {
-                    await AsyncStorage.setItem('isArtistDataUploaded', 'true');
-                  }
-                  if (res.data.item.isApproved == 1) {
-                    // await AsyncStorage.setItem('isArtistDataUploaded', 'true');
-                    navigation.reset({
-                      index: 0,
-                      routes: [
-                        {
-                          name: screenNames.ARTIST_HOME,
-                        },
-                      ],
-                    });
-                  } else {
-                    navigation.reset({
-                      index: 0,
-                      routes: [
-                        {
-                          name: 'ApplicationReviewPage',
-                        },
-                      ],
-                    });
-                  }
-                } else {
-                  navigation.reset({
-                    index: 0,
-                    routes: [
-                      {
-                        name: 'ArtistLogin',
-                        params: {
-                          hasMobile: 'true',
-                        },
-                      },
-                    ],
-                  });
-                }
-              }
-            }
+            await handleLoginSuccess(res.data);
             // navigateToPage(isNewUser ? 'Register' : 'Home');
           } else {
             setErrorMessage('Enter correct OTP');
