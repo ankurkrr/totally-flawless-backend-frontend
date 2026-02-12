@@ -17,7 +17,7 @@ import { API_URL } from '../store/url';
 import screenNames from '../constants/screenNames';
 import axiosInstance from '../services/axiosInterceptor';
 import { asynchEnums } from '../constants/enums';
-import { Icon } from '@rneui/base';
+
 
 
 const BottomBar = ({ navigation, page }) => {
@@ -33,7 +33,7 @@ const BottomBar = ({ navigation, page }) => {
     page === screenNames.USER_BOOKING && setCurrentPage(screenNames.USER_BOOKING);
     // page === "Bookings" && setCurrentPage(screenNames.USER_BOOKING);
     page === screenNames.USER_PROFILE && setCurrentPage(screenNames.USER_PROFILE);
-    page === screenNames.MAP_SCREEN && setCurrentPage(screenNames.MAP_SCREEN);
+
   }, []);
 
   const getCartItems = async id => {
@@ -171,26 +171,7 @@ const BottomBar = ({ navigation, page }) => {
             Booking
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => navigation(screenNames.MAP_SCREEN)}
-          style={styles.bottomIconDiv}>
-          <View style={{ height: 35, width: 35, justifyContent: 'center', alignItems: 'center' }}>
-            <Icon
-              name="location-on"
-              type="material"
-              size={32}
-              color="#444444"
-            />
-          </View>
-          <Text
-            style={{
-              color: 'black',
-              fontWeight: currentPage === screenNames.MAP_SCREEN ? 'bold' : 'normal',
-              fontSize: 12,
-            }}>
-            Map
-          </Text>
-        </TouchableOpacity>
+
         <TouchableOpacity
           onPress={() => navigation(screenNames.USER_PROFILE)}
           style={styles.bottomIconDiv}>
