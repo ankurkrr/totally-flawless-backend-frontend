@@ -34,7 +34,7 @@
     "base64-js": "^1.5.1",
     "buffer": "^6.0.3",
     "dayjs": "^1.11.11",
-    "expo": "49.0.23",
+    "expo": "^49.0.23",
     "expo-dev-client": "3.3.12",
     "expo-modules-core": "1.11.11",
     "lodash": "^4.17.21",
@@ -105,13 +105,13 @@
     "react-test-renderer": "18.2.0",
     "typescript": "5.0.4"
   },
-    "overrides": {
-      "expo": "49.0.23",
-      "expo-dev-client": "3.3.12",
-      "expo-modules-core": "1.11.11",
-      "@react-native-community/datetimepicker": "7.7.0",
-      "react-native-ui-datepicker": "2.0.2",
-      "react-dom": "18.2.0"
+  "overrides": {
+    "expo": "49.0.23",
+    "expo-dev-client": "3.3.12",
+    "expo-modules-core": "1.11.11",
+    "@react-native-community/datetimepicker": "7.7.0",
+    "react-native-ui-datepicker": "2.0.2",
+    "react-dom": "18.2.0"
   },
   "engines": {
     "node": ">=18"
