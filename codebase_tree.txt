@@ -1,3 +1,264 @@
+tf-backend code tree:
+
+tf-backend (root)
+- .env
+- .gitignore
+- README.md
+- TESTING_README.md
+- app.js
+- env.example
+- env.local.example
+- jest.config.js
+- package-lock.json
+- package.json
+  bin/
+    - www
+
+  connection/
+    - constant.js
+    - database.js
+    - flawless_17102024.sql
+    - knexdatabase.js
+    - mail.js
+    - s3Service.js
+    - s3ServiceImg.js
+    - sendmail.js
+    - twilioOtp.js
+
+    postmancollection/
+      - README.md
+      - flawless-api-v2.json
+      - flawless040124.json
+      - upload-api.json
+
+  controllers/
+    - ChatController.js
+    - DeviceController.js
+    - WishlistController.js
+    - addAddressesController.js
+    - artistController.js
+    - bookingController.js
+    - cartController.js
+    - createArtistController.js
+    - createBookingsController.js
+    - createSignupController.js
+    - deleteAddressController.js
+    - galleryController.js
+    - getAddressByIdController.js
+    - getAddressController.js
+    - getArtistDetailsController.js
+    - getArtistOtpController.js
+    - getBookingsController.js
+    - getCategoriesWithServicesController.js
+    - getOtpController.js
+    - getPricesForServiceController.js
+    - getSubCategoriesController.js
+    - getUserDetailsController.js
+    - isEmailExistController.js
+    - paymentController.js
+    - tokenController.js
+    - trainingController.js
+    - updateAddressController.js
+    - updateArtistController.js
+    - updateUserController.js
+    - uploadController.js
+    - userController.js
+
+    admin/
+      - artistController.js
+      - artistlevelController.js
+      - authController.js
+      - bookingController.js
+      - chatControlller.js
+      - dashboardController.js
+      - notificationController.js
+      - pageController.js
+      - reportController.js
+      - serviceController.js
+      - userController.js
+
+  cron/
+    - cron.js
+    - keyRotationCron.js
+
+  logs/
+    - combined.log
+    - error.log
+
+  middleware/
+    - asyncHandler.js
+    - authMiddleware.js
+    - cacheMiddleware.js
+    - errorHandler.js
+    - rateLimiter.js
+    - validation.js
+
+  public/
+
+    stylesheets/
+      - style.css
+
+  routes/
+    - artistRoutes.js
+    - authRoutes.js
+    - bookingRoutes.js
+    - cartRoutes.js
+    - catalogRoutes.js
+    - chatRoutes.js
+    - deviceRoutes.js
+    - galleryRoutes.js
+    - index.js
+    - legacyRoutes.js
+    - paymentRoutes.js
+    - trainingRoutes.js
+    - uploadRoutes.js
+    - userRoutes.js
+    - users.js
+    - wishlistRoutes.js
+
+    admin/
+      - artistRoutes.js
+      - authRoutes.js
+      - bookingRoutes.js
+      - chatRoutes.js
+      - dashboardRoutes.js
+      - index.js
+      - notificationRoutes.js
+      - pageRoutes.js
+      - reportRoutes.js
+      - serviceRoutes.js
+      - userRoutes.js
+
+  scripts/
+    - migrateKeysToDatabase.js
+    - repair_db_tables.js
+    - runKeyManagementMigration.js
+    - runUploadsMigration.js
+
+  services/
+    - ChatService.js
+    - DeviceService.js
+    - WishlistService.js
+    - addAddressesService.js
+    - artistService.js
+    - bookingService.js
+    - cartService.js
+    - createArtistService.js
+    - createBookingsService.js
+    - createSignupService.js
+    - deleteAddressService.js
+    - galleryService.js
+    - getAddressService.js
+    - getAddressbyIdService.js
+    - getArtistDetailsService.js
+    - getArtistOtpService.js
+    - getBookingsService.js
+    - getCategoriesWithServicesService.js
+    - getOtpService.js
+    - getPricesForService.js
+    - getSubCategoriesService.js
+    - getUserDetailsService.js
+    - isEmailExistService.js
+    - keyManagementService.js
+    - stripe.js
+    - stsService.js
+    - tokenService.js
+    - trainingService.js
+    - updateAddressService.js
+    - updateArtistService.js
+    - updateUserService.js
+    - uploadService.js
+    - userService.js
+
+    admin/
+      - activityLogger.js
+      - artistService.js
+      - artistlevelService.js
+      - authService.js
+      - bookingService.js
+      - chatService.js
+      - dashboardService.js
+      - notificationService.js
+      - pageService.js
+      - reportService.js
+      - serviceService.js
+      - userService.js
+
+  tests/
+    - README_DATABASE_SETUP.md
+    - TEST_TEMPLATE.example.js
+    - artists.test.js
+    - auth.test.js
+    - bookings.test.js
+    - cart.test.js
+    - catalog.test.js
+    - chat.test.js
+    - device.test.js
+    - example.test.js
+    - gallery.test.js
+    - payments.test.js
+    - setup.js
+    - teardown.js
+    - test-db-config.js
+    - training.test.js
+    - uploads.test.js
+    - users.test.js
+    - verify-db-connection.js
+    - wishlist.test.js
+
+    helpers/
+      - dbHelpers.js
+      - mockFactories.js
+      - testHelpers.js
+
+    integration/
+      - bookingFlow.test.js
+
+      fixtures/
+        - testData.js
+
+      helpers/
+        - integrationHelpers.js
+
+    middleware/
+      - authMiddleware.test.js
+      - errorHandler.test.js
+      - rateLimiter.test.js
+      - validation.test.js
+
+    unit/
+
+      services/
+        - tokenService.test.js
+        - userService.test.js
+
+  utils/
+    - cacheService.js
+    - envValidator.js
+    - errorUtils.js
+    - fileUpload.js
+    - firebaseInit.js
+    - keyProvider.js
+    - keyTiers.js
+    - logger.js
+
+  validators/
+    - addressValidators.js
+    - artistValidators.js
+    - bookingValidators.js
+    - cartValidators.js
+    - catalogValidators.js
+    - chatValidators.js
+    - commonValidators.js
+    - paymentValidators.js
+    - uploadValidators.js
+    - userValidators.js
+
+  views/
+    - error.jade
+    - index.jade
+    - layout.jade
+
 tf-frontend code tree:
 
 tf-frontend (root)
